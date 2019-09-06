@@ -6,7 +6,8 @@ CSCE 452 Robotics Project
 - Hannah Gooden
 - Mauro Lopez
 - Adam Marek
-- Rubennnnnnn
+- Ruben Vazquez-Chapa
+- Barret Pickett
 
 ### Project Description:
 
