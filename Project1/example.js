@@ -116,6 +116,7 @@ function rotationMatrix(theta1, theta2, theta3) {
     
 }
 
+// functions to rotate tha arms
 function rotateClockwise(link, linkOrigin) {
     link.rotate(1, linkOrigin[0], linkOrigin[1]);
 }
@@ -125,22 +126,25 @@ function rotateCounterClockwise(link, linkOrigin) {
 }
 
 anychart.onDocumentLoad(function () {
+    
+    // initialize drawing area
     var stage = acgraph.create('drawing-area');
-
     var windowBorder = stage.rect(0,0, 600, 600);
 
+    // create base
     var baseOrigin = [300, 600];
     var baseDimension = [10,10];
     var base = stage.rect(baseOrigin[0] - baseDimension[0]/2, baseOrigin[1] - baseDimension[1], baseDimension[0], baseDimension[1]);
 
+    // create joint 1
     var joint1;
     var link1Origin = [300, 600];
-    console.log(link1Origin[0]);
     var link1Dimension = [6, 150];
     var link1 = stage.rect(link1Origin[0], link1Origin[1], link1Dimension[0], link1Dimension[1]);
     link1.fill('blue');
     link1.rotate(180, link1Origin[0], link1Origin[1]);
 
+    // joint 1 button functions
     $("#link1clockwise").click(function() {
         rotateClockwise(link1, link1Origin);
     });
@@ -149,6 +153,7 @@ anychart.onDocumentLoad(function () {
         rotateCounterClockwise(link1, link1Origin);
     });
 
+    // create joint 2
     var joint2;
     var link2Origin = [300,450];
     var link2Dimension = [6, 100];
@@ -156,6 +161,7 @@ anychart.onDocumentLoad(function () {
     link2.fill('red');
     link2.rotate(180, link2Origin[0], link2Origin[1]);
 
+    // joint 2 button functions
     $("#link2clockwise").click(function() {
         rotateClockwise(link2, link2Origin);
     });
@@ -164,6 +170,7 @@ anychart.onDocumentLoad(function () {
         rotateCounterClockwise(link2, link2Origin);
     });
 
+    // create joint 3
     var joint3;
     var link3Origin = [300, 350];
     var link3Dimension = [6, 75];
@@ -171,6 +178,7 @@ anychart.onDocumentLoad(function () {
     link3.fill('green');
     link3.rotate(180, link3Origin[0], link3Origin[1]);
 
+    // joint 3 button functions
     $("#link3clockwise").click(function() {
         rotateClockwise(link3, link3Origin);
     });
@@ -179,6 +187,7 @@ anychart.onDocumentLoad(function () {
         rotateCounterClockwise(link3, link3Origin);
     });
 
+    // create paintbrush
     var paintBrushOrigin = [300, 100];
     var paintBrushDimension = 10;
     var paintBrush = stage.circle(paintBrushOrigin[0], paintBrushOrigin[1], paintBrushDimension);
