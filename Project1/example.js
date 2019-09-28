@@ -116,21 +116,24 @@ function rotationMatrix(theta1, theta2, theta3) {
     
 }
 
+function rotateClockwise(link, linkOrigin) {
+    link.rotate(1, linkOrigin[0], linkOrigin[1]);
+}
 
+function rotateCounterClockwise(link, linkOrigin) {
+    link.rotate(-1, linkOrigin[0], linkOrigin[1]);
+}
 
 anychart.onDocumentLoad(function () {
-    var stage = acgraph.create('container');
+    var stage = acgraph.create('drawing-area');
 
     var windowBorder = stage.rect(0,0, 600, 600);
-    var controlWindowBorder = stage.rect(500, 10, 90, 200);
 
     var baseOrigin = [300, 600];
     var baseDimension = [10,10];
     var base = stage.rect(baseOrigin[0] - baseDimension[0]/2, baseOrigin[1] - baseDimension[1], baseDimension[0], baseDimension[1]);
-    //base.fill('black');
 
     var joint1;
-
     var link1Origin = [300, 600];
     console.log(link1Origin[0]);
     var link1Dimension = [6, 150];
@@ -138,37 +141,46 @@ anychart.onDocumentLoad(function () {
     link1.fill('blue');
     link1.rotate(180, link1Origin[0], link1Origin[1]);
 
-    var joint2;
+    $("#link1clockwise").click(function() {
+        rotateClockwise(link1, link1Origin);
+    });
 
-    var link2Origin = [200,300];
+    $("#link1counterclockwise").click(function() {
+        rotateCounterClockwise(link1, link1Origin);
+    });
+
+    var joint2;
+    var link2Origin = [300,450];
     var link2Dimension = [6, 100];
     var link2 = stage.rect(link2Origin[0], link2Origin[1], link2Dimension[0], link2Dimension[1]);
     link2.fill('red');
-    var joint3;
+    link2.rotate(180, link2Origin[0], link2Origin[1]);
 
-    var link3Origin = [100, 200];
+    $("#link2clockwise").click(function() {
+        rotateClockwise(link2, link2Origin);
+    });
+
+    $("#link2counterclockwise").click(function() {
+        rotateCounterClockwise(link2, link2Origin);
+    });
+
+    var joint3;
+    var link3Origin = [300, 350];
     var link3Dimension = [6, 75];
     var link3 = stage.rect(link3Origin[0], link3Origin[1], link3Dimension[0], link3Dimension[1]);
     link3.fill('green');
+    link3.rotate(180, link3Origin[0], link3Origin[1]);
+
+    $("#link3clockwise").click(function() {
+        rotateClockwise(link3, link3Origin);
+    });
+
+    $("#link3counterclockwise").click(function() {
+        rotateCounterClockwise(link3, link3Origin);
+    });
 
     var paintBrushOrigin = [300, 100];
     var paintBrushDimension = 10;
     var paintBrush = stage.circle(paintBrushOrigin[0], paintBrushOrigin[1], paintBrushDimension);
 
-
-    // var blueCircle = stage.circle(170, 100, 100);
-    // blueCircle.fill('#90CAF9');
-
-    // var redCircle = stage.circle(200,50, 50);
-
-    // var rectangle = stage.rect(120, 50, 100, 100);
-    // rectangle.fill('#4aa832');
-
-    // rectangle.listen("click", function() {
-    //     rectangel.fill('red');
-    // });
-    // Sets rotation.
-    //rectangle.setRotation(10, 100, 100);
-
-    //rectangle.rotate(0, 120, 50);
     });

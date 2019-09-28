@@ -1,18 +1,22 @@
 <!doctype html>
 <head>
     <script src="https://cdn.anychart.com/releases/8.7.0/js/anychart-base.min.js" type="text/javascript"></script>
+    <script src="https://ajax.aspnetcdn.com/ajax/jQuery/jquery-3.4.1.min.js"></script>
     <script src="example.js"></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.11.2/css/all.css">
+    <link rel="stylesheet" type="text/css" href="index.css">
 </head>
 <body>
     <div style="display: flex; flex-direction: row">
-        <div id="container" style="width: 601px; height: 601px;"></div>
-        <div>
-            <!-- <button> Link 1 Clockwise</button>
-            <button> Link 1 Counter Clockwise</button>
-            <button> Link 2 Clockwise</button>
-            <button> Link 2 Counter Clockwise</button>
-            <button> Link 3 Clockwise</button>
-            <button> Link 3 Counter Clockwise</button> -->
+        <div id="drawing-area" class="drawing-area"></div>
+        <div class="control-panel">
+            <button id="link3counterclockwise" class="btn btn-light"> Link 3 <i class="fas fa-undo"></i></button>
+            <button id="link3clockwise" class="btn btn-light"> Link 3 <i class="fas fa-redo"></i></button>
+            <button id="link2counterclockwise" class="btn btn-light"> Link 2 <i class="fas fa-undo"></i></button>
+            <button id="link2clockwise" class="btn btn-light"> Link 2 <i class="fas fa-redo"></i></button>
+            <button id="link1counterclockwise" class="btn btn-light"> Link 1 <i class="fas fa-undo"></i></button>
+            <button id="link1clockwise" class="btn btn-light"> Link 1 <i class="fas fa-redo"></i></button>
         </div>
     </div>
 </body>
