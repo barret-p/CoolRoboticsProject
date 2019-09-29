@@ -1,0 +1,171 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>Dialog</class>
+ <widget class="QDialog" name="Dialog">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>853</width>
+    <height>619</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Dialog</string>
+  </property>
+  <widget class="QFrame" name="frame">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>601</width>
+     <height>601</height>
+    </rect>
+   </property>
+   <property name="frameShape">
+    <enum>QFrame::Box</enum>
+   </property>
+   <property name="frameShadow">
+    <enum>QFrame::Raised</enum>
+   </property>
+   <widget class="QGroupBox" name="groupBox">
+    <property name="geometry">
+     <rect>
+      <x>300</x>
+      <y>450</y>
+      <width>6</width>
+      <height>150</height>
+     </rect>
+    </property>
+    <property name="title">
+     <string>GroupBox</string>
+    </property>
+   </widget>
+   <widget class="Line" name="line">
+    <property name="geometry">
+     <rect>
+      <x>143</x>
+      <y>280</y>
+      <width>20</width>
+      <height>111</height>
+     </rect>
+    </property>
+    <property name="sizePolicy">
+     <sizepolicy hsizetype="Expanding" vsizetype="Minimum">
+      <horstretch>0</horstretch>
+      <verstretch>0</verstretch>
+     </sizepolicy>
+    </property>
+    <property name="orientation">
+     <enum>Qt::Vertical</enum>
+    </property>
+   </widget>
+  </widget>
+  <widget class="QPushButton" name="incrTheta1Button">
+   <property name="geometry">
+    <rect>
+     <x>740</x>
+     <y>40</y>
+     <width>75</width>
+     <height>23</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Link 1 CW</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="link2CCWButton">
+   <property name="geometry">
+    <rect>
+     <x>640</x>
+     <y>110</y>
+     <width>75</width>
+     <height>23</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Link 2 CCW</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="incrTheta2Button">
+   <property name="geometry">
+    <rect>
+     <x>740</x>
+     <y>110</y>
+     <width>75</width>
+     <height>23</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Link 2 CW</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="link3CCWButton">
+   <property name="geometry">
+    <rect>
+     <x>640</x>
+     <y>180</y>
+     <width>75</width>
+     <height>23</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Link 3 CCW</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="incrTheta3Button">
+   <property name="geometry">
+    <rect>
+     <x>740</x>
+     <y>180</y>
+     <width>75</width>
+     <height>23</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Link 3 CW</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="drawOffButton">
+   <property name="geometry">
+    <rect>
+     <x>640</x>
+     <y>250</y>
+     <width>75</width>
+     <height>23</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Draw Off</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="drawOnButton">
+   <property name="geometry">
+    <rect>
+     <x>740</x>
+     <y>250</y>
+     <width>75</width>
+     <height>23</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Draw On</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="link1CCWButton">
+   <property name="geometry">
+    <rect>
+     <x>640</x>
+     <y>40</y>
+     <width>75</width>
+     <height>23</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Link 1 CCW</string>
+   </property>
+  </widget>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>
