@@ -38,6 +38,18 @@ class MyWindow(QtWidgets.QMainWindow):
         self.pushButtonClear.clicked.connect(self.Clear)
         self.pushButtonUndo.clicked.connect(self.Undo)
         
+        self.horizontalSlider.setRange(0, 360)
+        self.horizontalSlider_2.setRange(0, 360)
+        self.horizontalSlider_3.setRange(0, 360)
+        
+        self.horizontalSlider.setValue(theta1)
+        self.horizontalSlider_2.setValue(theta2)
+        self.horizontalSlider_3.setValue(theta3)
+        
+        self.horizontalSlider.valueChanged.connect(self.Joint1Slilder)
+        self.horizontalSlider_2.valueChanged.connect(self.Joint2Slilder)
+        self.horizontalSlider_3.valueChanged.connect(self.Joint3Slilder)
+        
         self.setWindowTitle('Project 1: Forward Kinematics')    
         self.show()
 
@@ -110,6 +122,9 @@ class MyWindow(QtWidgets.QMainWindow):
         theta1 = theta1 + .1
         theta2 = theta2 + .1
         theta3 = theta3 + .1
+        self.horizontalSlider.setValue(theta1)
+        self.horizontalSlider_2.setValue(theta2)
+        self.horizontalSlider_3.setValue(theta3)
         self.update()
 
     def Joint1CW(self):
@@ -119,6 +134,9 @@ class MyWindow(QtWidgets.QMainWindow):
         theta1 = theta1 - .1
         theta2 = theta2 - .1
         theta3 = theta3 - .1
+        self.horizontalSlider.setValue(theta1)
+        self.horizontalSlider_2.setValue(theta2)
+        self.horizontalSlider_3.setValue(theta3)
         self.update()
 
     def Joint2CCW(self):
@@ -127,6 +145,8 @@ class MyWindow(QtWidgets.QMainWindow):
         global theta2, theta3
         theta2 = theta2 + .1
         theta3 = theta3 + .1
+        self.horizontalSlider_2.setValue(theta2)
+        self.horizontalSlider_3.setValue(theta3)
         self.update()
 
     def Joint2CW(self):
@@ -135,6 +155,8 @@ class MyWindow(QtWidgets.QMainWindow):
         global theta2, theta3
         theta2 = theta2 - .1
         theta3 = theta3 - .1
+        self.horizontalSlider_2.setValue(theta2)
+        self.horizontalSlider_3.setValue(theta3)
         self.update()
 
     def Joint3CCW(self):
@@ -142,6 +164,7 @@ class MyWindow(QtWidgets.QMainWindow):
             self.Paint()
         global theta3 
         theta3 = theta3 + .1
+        self.horizontalSlider_3.setValue(theta3)
         self.update()
 
     def Joint3CW(self):
@@ -149,8 +172,34 @@ class MyWindow(QtWidgets.QMainWindow):
             self.Paint()
         global theta3
         theta3 = theta3 - .1
+        self.horizontalSlider_3.setValue(theta3)
         self.update()
 
+    def Joint1Slilder(self):
+        if self.checkBox.isChecked():
+            self.Paint()
+        global theta1, theta2, theta3
+        changeInTheta = self.horizontalSlider.value()/10.0 - theta1
+        theta1 += changeInTheta
+        theta2 += changeInTheta
+        theta3 += changeInTheta
+        self.update()
+        
+    def Joint2Slilder(self):
+        if self.checkBox.isChecked():
+            self.Paint()
+        global theta2, theta3
+        changeInTheta = self.horizontalSlider_2.value()/10.0 - theta2
+        theta2 += changeInTheta
+        theta3 += changeInTheta
+        self.update()
+        
+    def Joint3Slilder(self):
+        if self.checkBox.isChecked():
+            self.Paint()
+        global theta3
+        theta3 = self.horizontalSlider_3.value()/10.0
+        self.update()
 
     def Paint(self):
         global point_list, brush_x, brush_y

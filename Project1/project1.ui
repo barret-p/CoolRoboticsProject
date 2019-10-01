@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>866</width>
-    <height>646</height>
+    <width>987</width>
+    <height>722</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -22,10 +22,10 @@
    <widget class="QGroupBox" name="groupBox">
     <property name="geometry">
      <rect>
-      <x>640</x>
-      <y>10</y>
-      <width>201</width>
-      <height>431</height>
+      <x>770</x>
+      <y>0</y>
+      <width>211</width>
+      <height>641</height>
      </rect>
     </property>
     <property name="font">
@@ -49,7 +49,7 @@
        <x>10</x>
        <y>30</y>
        <width>180</width>
-       <height>71</height>
+       <height>91</height>
       </rect>
      </property>
      <property name="font">
@@ -106,14 +106,27 @@
        <string>CW</string>
       </property>
      </widget>
+     <widget class="QSlider" name="horizontalSlider">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>60</y>
+        <width>160</width>
+        <height>20</height>
+       </rect>
+      </property>
+      <property name="orientation">
+       <enum>Qt::Horizontal</enum>
+      </property>
+     </widget>
     </widget>
     <widget class="QGroupBox" name="groupBox2">
      <property name="geometry">
       <rect>
        <x>10</x>
-       <y>110</y>
+       <y>130</y>
        <width>180</width>
-       <height>71</height>
+       <height>91</height>
       </rect>
      </property>
      <property name="font">
@@ -169,14 +182,27 @@
        <string>CW</string>
       </property>
      </widget>
+     <widget class="QSlider" name="horizontalSlider_2">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>60</y>
+        <width>160</width>
+        <height>20</height>
+       </rect>
+      </property>
+      <property name="orientation">
+       <enum>Qt::Horizontal</enum>
+      </property>
+     </widget>
     </widget>
     <widget class="QGroupBox" name="groupBox3">
      <property name="geometry">
       <rect>
        <x>10</x>
-       <y>190</y>
+       <y>240</y>
        <width>180</width>
-       <height>71</height>
+       <height>91</height>
       </rect>
      </property>
      <property name="font">
@@ -232,13 +258,26 @@
        <string>CW</string>
       </property>
      </widget>
+     <widget class="QSlider" name="horizontalSlider_3">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>60</y>
+        <width>160</width>
+        <height>20</height>
+       </rect>
+      </property>
+      <property name="orientation">
+       <enum>Qt::Horizontal</enum>
+      </property>
+     </widget>
     </widget>
     <widget class="QGroupBox" name="groupBox4">
      <property name="geometry">
       <rect>
        <x>10</x>
-       <y>270</y>
-       <width>180</width>
+       <y>350</y>
+       <width>191</width>
        <height>141</height>
       </rect>
      </property>
@@ -344,8 +383,8 @@
      <rect>
       <x>0</x>
       <y>0</y>
-      <width>601</width>
-      <height>601</height>
+      <width>761</width>
+      <height>651</height>
      </rect>
     </property>
     <property name="frameShape">
@@ -361,8 +400,8 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>866</width>
-     <height>21</height>
+     <width>987</width>
+     <height>30</height>
     </rect>
    </property>
   </widget>
