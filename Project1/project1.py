@@ -213,8 +213,8 @@ class MyWindow(QtWidgets.QMainWindow):
 
     def Undo(self):
         global point_list
-        point_list.pop()
-        point_list.pop()
+        if len(point_list):
+            point_list.pop()
         self.update()
 
 def main():
