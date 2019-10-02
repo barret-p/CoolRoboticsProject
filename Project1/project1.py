@@ -60,6 +60,10 @@ class MyWindow(QtWidgets.QMainWindow):
         self.horizontalSlider_2.setValue(theta2)
         self.horizontalSlider_3.setValue(theta3)
         
+        self.horizontalSlider.setTickInterval(0.1)
+        self.horizontalSlider_2.setTickInterval(0.1)
+        self.horizontalSlider_3.setTickInterval(0.1)
+        
         self.horizontalSlider.sliderMoved.connect(self.Joint1Slilder)
         self.horizontalSlider_2.sliderMoved.connect(self.Joint2Slilder)
         self.horizontalSlider_3.sliderMoved.connect(self.Joint3Slilder)
