@@ -12,4 +12,6 @@ CSCE 452 Robotics Project
 ### Project Description:
 
 
-Meeting Log: 
+[Meeting Log](https://github.com/barret-p/CoolRoboticsProject/wiki/Meeting-Log, "Meeting Log")  
+
+[Group Website](https://sites.google.com/tamu.edu/bawstondynamics/home?authuser=1, "Group Website")
