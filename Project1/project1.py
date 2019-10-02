@@ -23,8 +23,8 @@ class MyWindow(QtWidgets.QMainWindow):
     def __init__(self):
         super(MyWindow, self).__init__()
         uic.loadUi('project1.ui', self)
-         
         self.initUI()
+        self.brushColor = QtGui.QColor(255,255,255)
         
     def initUI(self):
 
@@ -41,8 +41,8 @@ class MyWindow(QtWidgets.QMainWindow):
 
         self.redButton.clicked.connect(self.redPressed)
         self.greenButton.clicked.connect(self.greenPressed)
-        self.redButton.clicked.connect(self.bluePressed)
-        self.redButton.clicked.connect(self.customPressed)
+        self.blueButton.clicked.connect(self.bluePressed)
+        self.customButton.clicked.connect(self.customPressed)
 
         intValidator = QtGui.QIntValidator(0,255)
         self.redEdit.setValidator(intValidator)
@@ -120,14 +120,16 @@ class MyWindow(QtWidgets.QMainWindow):
         global brush_x, brush_y
         brush_x = link3_endx - brush_rad / 2
         brush_y = link3_endy - brush_rad / 2
+        qp.setBrush(self.brushColor)
         qp.drawEllipse(brush_x, brush_y, brush_rad, brush_rad)
 
 
         #Draw paint
         for i in range(0, len(point_list)):
-            x = point_list[i][0]
-            y = point_list[i][1]
-            qp.setBrush(QtCore.Qt.black)
+            x = point_list[i][0][0]
+            y = point_list[i][0][1]
+            point_color = point_list[i][1]
+            qp.setBrush(point_color)
             qp.drawEllipse(x,y,10,10)
 
 #DRAWING FUNCTIONS
@@ -218,28 +220,45 @@ class MyWindow(QtWidgets.QMainWindow):
         theta3 = -self.horizontalSlider_3.value()
         self.update()
 
-    def redPressed(self):
-        self.redEdit.setText(255)
-        self.greenEdit.setText(0)
-        self.blueEdit.setText(0)
+    def checkColor(self, color):
+        if color.isdigit() and 0 <= int(color) <= 255:
+            print(color)
+            return int(color)
+        else:
+            print("bad color")
+            return 0
 
-        pass
+    def redPressed(self):
+        self.redEdit.setText('255')
+        self.greenEdit.setText('0')
+        self.blueEdit.setText('0')
+        self.brushColor = QtGui.QColor(255,0,0)
+        self.update()
 
     def greenPressed(self):
-        pass
+        self.redEdit.setText('0')
+        self.greenEdit.setText('255')
+        self.blueEdit.setText('0')
+        self.brushColor = QtGui.QColor(0,255,0)
+        self.update()
 
     def bluePressed(self):
-        pass
+        self.redEdit.setText('0')
+        self.greenEdit.setText('0')
+        self.blueEdit.setText('255')
+        self.brushColor = QtGui.QColor(0,0,255)
+        self.update()
 
     def customPressed(self):
-        pass
-
-    def setPaintBrushColor(self):
-        pass
+        red = self.checkColor(self.redEdit.text())
+        green = self.checkColor(self.greenEdit.text())
+        blue = self.checkColor(self.blueEdit.text())
+        self.brushColor = QtGui.QColor(red, green, blue)
+        self.update()
 
     def Paint(self):
         global point_list, brush_x, brush_y
-        point_list.append((brush_x, brush_y))
+        point_list.append(((brush_x, brush_y),self.brushColor))
         self.update()
 
     def Clear(self):
