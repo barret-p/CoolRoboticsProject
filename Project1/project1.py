@@ -66,6 +66,10 @@ class MyWindow(QtWidgets.QMainWindow):
         self.horizontalSlider_2.sliderMoved.connect(self.Joint2Slilder)
         self.horizontalSlider_3.sliderMoved.connect(self.Joint3Slilder)
         
+        self.horizontalSlider.sliderReleased.connect(self.updateSliderValues)
+        self.horizontalSlider_2.sliderReleased.connect(self.updateSliderValues)
+        self.horizontalSlider_3.sliderReleased.connect(self.updateSliderValues)
+        
         self.setWindowTitle('Project 1: Forward Kinematics')    
         self.show()
 
@@ -132,6 +136,11 @@ class MyWindow(QtWidgets.QMainWindow):
             qp.drawEllipse(x,y,10,10)
 
 #DRAWING FUNCTIONS
+    def updateSliderValues(self):
+        global theta1, theta2, theta3
+        self.horizontalSlider.setValue(-theta1)
+        self.horizontalSlider_2.setValue(-theta2)
+        self.horizontalSlider_3.setValue(-theta3)
 
     def Joint1CCW(self):
         if self.checkBox.isChecked():
