@@ -50,11 +50,9 @@ class MyWindow(QtWidgets.QMainWindow):
         self.blueEdit.setValidator(intValidator)
 
 
-        self.horizontalSlider.setRange(-181, 181)
-        self.horizontalSlider_2.setRange(-181, 181)
-        self.horizontalSlider_3.setRange(-181, 181)
-
-        
+        self.horizontalSlider.setRange(-3, 363)
+        self.horizontalSlider_2.setRange(-3, 363)
+        self.horizontalSlider_3.setRange(-3, 363)
         
         self.horizontalSlider.setValue(theta1)
         self.horizontalSlider_2.setValue(theta2)
@@ -76,10 +74,7 @@ class MyWindow(QtWidgets.QMainWindow):
         qp.begin(self)
         self.drawLines(qp)
         qp.end()
-
-    def to_radian(self, x):
-        return x * math.pi / 180 
-
+        
     def drawLines(self, qp):
         pen = QtGui.QPen(QtCore.Qt.black, 2, QtCore.Qt.SolidLine)
 
@@ -92,8 +87,8 @@ class MyWindow(QtWidgets.QMainWindow):
         #Draw first link
         link1_startx = originX
         link1_starty = originY
-        link1_endx = originX + l1len*math.sin(self.to_radian(theta1))
-        link1_endy = originY + l1len*math.cos(self.to_radian(theta1))
+        link1_endx = originX + l1len*math.sin(math.radians(theta1))
+        link1_endy = originY + l1len*math.cos(math.radians(theta1))
         link1 = qp.drawLine(link1_startx, link1_starty, link1_endx, link1_endy)
 
         #Draw second R joint
@@ -104,8 +99,8 @@ class MyWindow(QtWidgets.QMainWindow):
         #Draw second link
         link2_startx = link1_endx
         link2_starty = link1_endy
-        link2_endx = link2_startx + l2len*math.sin(self.to_radian(theta2))
-        link2_endy = link2_starty + l2len*math.cos(self.to_radian(theta2))
+        link2_endx = link2_startx + l2len*math.sin(math.radians(theta2))
+        link2_endy = link2_starty + l2len*math.cos(math.radians(theta2))
         link2 = qp.drawLine(link2_startx, link2_starty, link2_endx, link2_endy)
 
         #Draw third R joint
@@ -116,8 +111,8 @@ class MyWindow(QtWidgets.QMainWindow):
         #Draw third link
         link3_startx = link2_endx
         link3_starty = link2_endy
-        link3_endx = link3_startx + l3len*math.sin(self.to_radian(theta3))
-        link3_endy = link3_starty + l3len*math.cos(self.to_radian(theta3))
+        link3_endx = link3_startx + l3len*math.sin(math.radians(theta3))
+        link3_endy = link3_starty + l3len*math.cos(math.radians(theta3))
         link3 = qp.drawLine(link3_startx, link3_starty, link3_endx, link3_endy)
 
         #Draw paint brush
@@ -143,9 +138,9 @@ class MyWindow(QtWidgets.QMainWindow):
         theta1 = theta1 + delta_theta
         theta2 = theta2 + delta_theta
         theta3 = theta3 + delta_theta
-        self.horizontalSlider.setValue(theta1)
-        self.horizontalSlider_2.setValue(theta2)
-        self.horizontalSlider_3.setValue(theta3)
+        self.horizontalSlider.setValue(self.horizontalSlider.value() - delta_theta)
+        self.horizontalSlider_2.setValue(self.horizontalSlider_2.value() - delta_theta)
+        self.horizontalSlider_3.setValue(self.horizontalSlider_3.value() - delta_theta)
         self.update()
 
     def Joint1CW(self):
@@ -155,9 +150,9 @@ class MyWindow(QtWidgets.QMainWindow):
         theta1 = theta1 - delta_theta
         theta2 = theta2 - delta_theta
         theta3 = theta3 - delta_theta
-        self.horizontalSlider.setValue(theta1)
-        self.horizontalSlider_2.setValue(theta2)
-        self.horizontalSlider_3.setValue(theta3)
+        self.horizontalSlider.setValue(self.horizontalSlider.value() + delta_theta)
+        self.horizontalSlider_2.setValue(self.horizontalSlider_2.value() + delta_theta)
+        self.horizontalSlider_3.setValue(self.horizontalSlider_3.value() + delta_theta)
         self.update()
 
     def Joint2CCW(self):
@@ -166,8 +161,8 @@ class MyWindow(QtWidgets.QMainWindow):
         global theta2, theta3
         theta2 = theta2 + delta_theta
         theta3 = theta3 + delta_theta
-        self.horizontalSlider_2.setValue(theta2)
-        self.horizontalSlider_3.setValue(theta3)
+        self.horizontalSlider_2.setValue(self.horizontalSlider_2.value() - delta_theta)
+        self.horizontalSlider_3.setValue(self.horizontalSlider_3.value() - delta_theta)
         self.update()
 
     def Joint2CW(self):
@@ -176,8 +171,8 @@ class MyWindow(QtWidgets.QMainWindow):
         global theta2, theta3
         theta2 = theta2 - delta_theta
         theta3 = theta3 - delta_theta
-        self.horizontalSlider_2.setValue(theta2)
-        self.horizontalSlider_3.setValue(theta3)
+        self.horizontalSlider_2.setValue(self.horizontalSlider_2.value() + delta_theta)
+        self.horizontalSlider_3.setValue(self.horizontalSlider_3.value() + delta_theta)
         self.update()
 
     def Joint3CCW(self):
@@ -185,7 +180,7 @@ class MyWindow(QtWidgets.QMainWindow):
             self.Paint()
         global theta3 
         theta3 = theta3 + delta_theta
-        self.horizontalSlider_3.setValue(theta3)
+        self.horizontalSlider_3.setValue(self.horizontalSlider_3.value() - delta_theta)
         self.update()
 
     def Joint3CW(self):
@@ -193,7 +188,7 @@ class MyWindow(QtWidgets.QMainWindow):
             self.Paint()
         global theta3
         theta3 = theta3 - delta_theta
-        self.horizontalSlider_3.setValue(theta3)
+        self.horizontalSlider_3.setValue(self.horizontalSlider_3.value() + delta_theta)
         self.update()
 
     def Joint1Slilder(self):
