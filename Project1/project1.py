@@ -2,11 +2,11 @@ import sys, math
 from PyQt5 import QtGui, uic, QtCore, QtWidgets
 
 originX = 380
-originY = 330
+originY = 350
 d = 0
-theta1 = 90
-theta2 = -90
-theta3 = 90
+theta1 = 180 
+theta2 = 180
+theta3 = 180
 l1len= 150
 l2len = 100
 l3len = 75
@@ -14,6 +14,7 @@ joint_rad = 20
 brush_rad = 10
 brush_x = 0
 brush_y = 0
+delta_theta = 1
 
 point_list=[]
 
@@ -37,10 +38,23 @@ class MyWindow(QtWidgets.QMainWindow):
         self.pushButtonPaint.clicked.connect(self.Paint)
         self.pushButtonClear.clicked.connect(self.Clear)
         self.pushButtonUndo.clicked.connect(self.Undo)
+
+        self.redButton.clicked.connect(self.redPressed)
+        self.greenButton.clicked.connect(self.greenPressed)
+        self.redButton.clicked.connect(self.bluePressed)
+        self.redButton.clicked.connect(self.customPressed)
+
+        intValidator = QtGui.QIntValidator(0,255)
+        self.redEdit.setValidator(intValidator)
+        self.greenEdit.setValidator(intValidator)
+        self.blueEdit.setValidator(intValidator)
+
+
+        self.horizontalSlider.setRange(-181, 181)
+        self.horizontalSlider_2.setRange(-181, 181)
+        self.horizontalSlider_3.setRange(-181, 181)
+
         
-        self.horizontalSlider.setRange(-180, 180)
-        self.horizontalSlider_2.setRange(-180, 180)
-        self.horizontalSlider_3.setRange(-180, 180)
         
         self.horizontalSlider.setValue(theta1)
         self.horizontalSlider_2.setValue(theta2)
@@ -59,6 +73,9 @@ class MyWindow(QtWidgets.QMainWindow):
         self.drawLines(qp)
         qp.end()
 
+    def to_radian(self, x):
+        return x * math.pi / 180 
+
     def drawLines(self, qp):
         pen = QtGui.QPen(QtCore.Qt.black, 2, QtCore.Qt.SolidLine)
 
@@ -71,8 +88,8 @@ class MyWindow(QtWidgets.QMainWindow):
         #Draw first link
         link1_startx = originX
         link1_starty = originY
-        link1_endx = originX + l1len*math.sin(theta1)
-        link1_endy = originY + l1len*math.cos(theta1)
+        link1_endx = originX + l1len*math.sin(self.to_radian(theta1))
+        link1_endy = originY + l1len*math.cos(self.to_radian(theta1))
         link1 = qp.drawLine(link1_startx, link1_starty, link1_endx, link1_endy)
 
         #Draw second R joint
@@ -83,8 +100,8 @@ class MyWindow(QtWidgets.QMainWindow):
         #Draw second link
         link2_startx = link1_endx
         link2_starty = link1_endy
-        link2_endx = link2_startx + l2len*math.sin(theta2)
-        link2_endy = link2_starty + l2len*math.cos(theta2)
+        link2_endx = link2_startx + l2len*math.sin(self.to_radian(theta2))
+        link2_endy = link2_starty + l2len*math.cos(self.to_radian(theta2))
         link2 = qp.drawLine(link2_startx, link2_starty, link2_endx, link2_endy)
 
         #Draw third R joint
@@ -95,8 +112,8 @@ class MyWindow(QtWidgets.QMainWindow):
         #Draw third link
         link3_startx = link2_endx
         link3_starty = link2_endy
-        link3_endx = link3_startx + l3len*math.sin(theta3)
-        link3_endy = link3_starty + l3len*math.cos(theta3)
+        link3_endx = link3_startx + l3len*math.sin(self.to_radian(theta3))
+        link3_endy = link3_starty + l3len*math.cos(self.to_radian(theta3))
         link3 = qp.drawLine(link3_startx, link3_starty, link3_endx, link3_endy)
 
         #Draw paint brush
@@ -118,10 +135,10 @@ class MyWindow(QtWidgets.QMainWindow):
     def Joint1CCW(self):
         if self.checkBox.isChecked():
             self.Paint()
-        global theta1, theta2, theta3
-        theta1 = theta1 + .1
-        theta2 = theta2 + .1
-        theta3 = theta3 + .1
+        global theta1, theta2, theta3, delta_theta
+        theta1 = theta1 + delta_theta
+        theta2 = theta2 + delta_theta
+        theta3 = theta3 + delta_theta
         self.horizontalSlider.setValue(theta1)
         self.horizontalSlider_2.setValue(theta2)
         self.horizontalSlider_3.setValue(theta3)
@@ -131,9 +148,9 @@ class MyWindow(QtWidgets.QMainWindow):
         if self.checkBox.isChecked():
             self.Paint()
         global theta1, theta2, theta3
-        theta1 = theta1 - .1
-        theta2 = theta2 - .1
-        theta3 = theta3 - .1
+        theta1 = theta1 - delta_theta
+        theta2 = theta2 - delta_theta
+        theta3 = theta3 - delta_theta
         self.horizontalSlider.setValue(theta1)
         self.horizontalSlider_2.setValue(theta2)
         self.horizontalSlider_3.setValue(theta3)
@@ -143,8 +160,8 @@ class MyWindow(QtWidgets.QMainWindow):
         if self.checkBox.isChecked():
             self.Paint()
         global theta2, theta3
-        theta2 = theta2 + .1
-        theta3 = theta3 + .1
+        theta2 = theta2 + delta_theta
+        theta3 = theta3 + delta_theta
         self.horizontalSlider_2.setValue(theta2)
         self.horizontalSlider_3.setValue(theta3)
         self.update()
@@ -153,8 +170,8 @@ class MyWindow(QtWidgets.QMainWindow):
         if self.checkBox.isChecked():
             self.Paint()
         global theta2, theta3
-        theta2 = theta2 - .1
-        theta3 = theta3 - .1
+        theta2 = theta2 - delta_theta
+        theta3 = theta3 - delta_theta
         self.horizontalSlider_2.setValue(theta2)
         self.horizontalSlider_3.setValue(theta3)
         self.update()
@@ -163,7 +180,7 @@ class MyWindow(QtWidgets.QMainWindow):
         if self.checkBox.isChecked():
             self.Paint()
         global theta3 
-        theta3 = theta3 + .1
+        theta3 = theta3 + delta_theta
         self.horizontalSlider_3.setValue(theta3)
         self.update()
 
@@ -171,7 +188,7 @@ class MyWindow(QtWidgets.QMainWindow):
         if self.checkBox.isChecked():
             self.Paint()
         global theta3
-        theta3 = theta3 - .1
+        theta3 = theta3 - delta_theta
         self.horizontalSlider_3.setValue(theta3)
         self.update()
 
@@ -179,7 +196,7 @@ class MyWindow(QtWidgets.QMainWindow):
         if self.checkBox.isChecked():
             self.Paint()
         global theta1, theta2, theta3
-        changeInTheta = -self.horizontalSlider.value()/10.0 - theta1
+        changeInTheta = -self.horizontalSlider.value() - theta1
         theta1 += changeInTheta
         theta2 += changeInTheta
         theta3 += changeInTheta
@@ -189,7 +206,7 @@ class MyWindow(QtWidgets.QMainWindow):
         if self.checkBox.isChecked():
             self.Paint()
         global theta2, theta3
-        changeInTheta = -self.horizontalSlider_2.value()/10.0 - theta2
+        changeInTheta = -self.horizontalSlider_2.value()- theta2
         theta2 += changeInTheta
         theta3 += changeInTheta
         self.update()
@@ -198,8 +215,27 @@ class MyWindow(QtWidgets.QMainWindow):
         if self.checkBox.isChecked():
             self.Paint()
         global theta3
-        theta3 = -self.horizontalSlider_3.value()/10.0
+        theta3 = -self.horizontalSlider_3.value()
         self.update()
+
+    def redPressed(self):
+        self.redEdit.setText(255)
+        self.greenEdit.setText(0)
+        self.blueEdit.setText(0)
+
+        pass
+
+    def greenPressed(self):
+        pass
+
+    def bluePressed(self):
+        pass
+
+    def customPressed(self):
+        pass
+
+    def setPaintBrushColor(self):
+        pass
 
     def Paint(self):
         global point_list, brush_x, brush_y
