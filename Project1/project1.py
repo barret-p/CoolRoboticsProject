@@ -133,6 +133,7 @@ class MyWindow(QtWidgets.QMainWindow):
             y = point_list[i][0][1]
             point_color = point_list[i][1]
             qp.setBrush(point_color)
+            qp.setPen(point_color)
             qp.drawEllipse(x,y,10,10)
 
 #DRAWING FUNCTIONS
