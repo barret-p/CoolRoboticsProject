@@ -231,7 +231,6 @@ class MyWindow(QtWidgets.QMainWindow):
 
     def checkColor(self, color):
         if color.isdigit() and 0 <= int(color) <= 255:
-            print(color)
             return int(color)
         else:
             print("bad color")
