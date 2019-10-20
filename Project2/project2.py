@@ -1,22 +1,29 @@
 import sys, math
 from PyQt5 import QtGui, uic, QtCore, QtWidgets
+from numpy import *
+from scipy.optimize import *
 
+# fixed origin
 originX = 380
 originY = 350
-d = 0
+# angle of three joints
 theta1 = 180 
 theta2 = 180
 theta3 = 180
+# length of three joints
 l1len= 150
 l2len = 100
 l3len = 75
+# radius of joint and brush
 joint_rad = 20
 brush_rad = 10
+# position of paint brush
 brush_x = 0
 brush_y = 0
+# change in angle (degrees)
 delta_theta = 1
 
-point_list=[]
+point_list = []
 
 class MyWindow(QtWidgets.QMainWindow):
     
@@ -38,6 +45,11 @@ class MyWindow(QtWidgets.QMainWindow):
         self.pushButtonPaint.clicked.connect(self.Paint)
         self.pushButtonClear.clicked.connect(self.Clear)
         self.pushButtonUndo.clicked.connect(self.Undo)
+
+        self.pushButtonIncrX.clicked.connect(self.IncrX)
+        self.pushButtonDecrX.clicked.connect(self.DecrX)
+        self.pushButtonIncrY.clicked.connect(self.IncrY)
+        self.pushButtonDecrY.clicked.connect(self.DecrY)
 
         self.redButton.clicked.connect(self.redPressed)
         self.greenButton.clicked.connect(self.greenPressed)
@@ -135,8 +147,61 @@ class MyWindow(QtWidgets.QMainWindow):
             qp.setBrush(point_color)
             qp.setPen(point_color)
             qp.drawEllipse(x,y,10,10)
+    
+    def keyPressEvent(self, event):
+        key = event.key()
+
+        if key == QtCore.Qt.Key_A:
+            self.DecrX()
+        elif key == QtCore.Qt.Key_D:
+            self.IncrX()
+        elif key == QtCore.Qt.Key_W:
+            self.IncrY()
+        elif key == QtCore.Qt.Key_S:
+            self.DecrY()
 
 #DRAWING FUNCTIONS
+
+    def DecrX(self):
+        pass
+
+    def IncrX(self):
+        pass
+
+    def DecrY(self):
+        pass
+
+    def IncrY(self):
+        global theta1, theta2, theta3
+
+        cur_x = brush_x
+        cur_y = brush_y
+        cur_y += 2
+
+        total_l = l1len + l2len + l3len
+
+        # possible solution
+        if math.sqrt(cur_x * cur_x + cur_y * cur_y) <= total_l:
+            pass
+        
+        # impossible solution
+        else:
+            pass
+
+        pass
+
+    def thetaSolver(theta, pos):
+        t1 = theta[0]
+        t2 = theta[1]
+        t3 = theta[2]
+
+        x = pos[0]
+        y = pos[1]
+
+        F = empty((3))
+        F[0] = x - l1len * l2len * l3len * math.sin(t1) * math.sin(t2) * math.sin(t2)
+        F[1] = y - l1len * l2len * l3len * math.cos(t1) * math.cos(t2) * math.cos(t2)
+
     def updateSliderValues(self):
         global theta1, theta2, theta3
         self.horizontalSlider.setValue(-theta1)
