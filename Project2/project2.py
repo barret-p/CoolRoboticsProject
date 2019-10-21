@@ -1,7 +1,8 @@
 import sys, math
 from PyQt5 import QtGui, uic, QtCore, QtWidgets
-#from numpy import *
+import numpy as np
 from scipy.optimize import fsolve
+from scipy.optimize import fmin_slsqp
 #from scipy.optimize import *
 
 # fixed origin
@@ -9,12 +10,15 @@ originX = 380
 originY = 350
 # angle of three joints
 theta1 = 180 
-theta2 = 180
+theta2 = 120
 theta3 = 180
+t = [theta1, theta2, theta3]
+q0 = np.array([np.pi/4, np.pi/4, np.pi/4])
 # length of three joints
 l1len= 150
 l2len = 100
 l3len = 75
+L = [l1len, l2len, l3len]
 # radius of joint and brush
 joint_rad = 20
 brush_rad = 10
@@ -48,13 +52,62 @@ def equations(thetas, x, y):
     t1 = math.radians(t1)
     t2 = math.radians(t2)
     t3 = math.radians(t3)
-    x_ = originX + l1len*math.sin(t1) + l2len*math.sin(t1 + t2) + l3len*math.sin(t1+t2+t3)
-    y_ = originY + l1len*math.cos(t1) + l2len*math.cos(t1 + t2) + l3len*math.cos(t1+t2+t3)
+    x_ = originX + l1len*math.sin(t1) + l2len*math.sin(t2) + l3len*math.sin(t3)
+    y_ = originY + l1len*math.cos(t1) + l2len*math.cos(t2) + l3len*math.cos(t3)
     
     e1 = x - x_
     e2 = y - y_
-    e3 = math.sqrt(pow(x,2)+pow(y,2)) - math.sqrt(pow(x_,2) + pow(y_,2))
+    e3 = t1 - t2
     return (e1,e2,e3)
+
+def distance_to_default(q, *args):
+    """Objective function to minimize
+    Calculates the euclidean distance through joint space to the
+    default arm configuration. The weight list allows the penalty of
+    each joint being away from the resting position to be scaled
+    differently, such that the arm tries to stay closer to resting
+    state more for higher weighted joints than those with a lower
+    weight.
+    q : np.array
+        the list of current joint angles
+    returns : scalar
+        euclidean distance to the default arm position
+    """
+    # weights found with trial and error,
+    # get some wrist bend, but not much
+    weight = [1, 1, 1.3]
+    return np.sqrt(np.sum([(qi - q0i)**2 * wi
+                   for qi, q0i, wi in zip(q, q0, weight)]))
+
+def x_constraint(q, xy):
+    """Returns the corresponding hand xy coordinates for
+    a given set of joint angle values [shoulder, elbow, wrist],
+    and the above defined arm segment lengths, L
+    q : np.array
+        the list of current joint angles
+    xy : np.array
+        current xy position (not used)
+    returns : np.array
+        the difference between current and desired x position
+    """
+    x = (L[0]*np.sin(q[0]) + L[1]*np.sin(q[1]) +
+         L[2]*np.sin(q[2])) - xy[0]
+    return x
+
+def y_constraint(q, xy):
+    """Returns the corresponding hand xy coordinates for
+    a given set of joint angle values [shoulder, elbow, wrist],
+    and the above defined arm segment lengths, L
+    q : np.array
+        the list of current joint angles
+    xy : np.array
+        current xy position (not used)
+    returns : np.array
+        the difference between current and desired y position
+    """
+    y = (L[0]*np.cos(q[0]) + L[1]*np.cos(q[1]) +
+         L[2]*np.cos(q[2])) - xy[1]
+    return y
 
 
 class MyWindow(QtWidgets.QMainWindow):
@@ -174,6 +227,8 @@ class MyWindow(QtWidgets.QMainWindow):
         qp.setBrush(self.brushColor)
         qp.drawEllipse(brush_x, brush_y, brush_rad, brush_rad)
 
+        global t
+        t = [theta1, theta2, theta3]
 
         #Draw paint
         for i in range(0, len(point_list)):
@@ -205,12 +260,55 @@ class MyWindow(QtWidgets.QMainWindow):
         pass
 
     def DecrY(self):
-        pass
+        if self.checkBox.isChecked():
+            self.Paint()
+        global t, theta1, theta2, theta3
+
+        cur_x = brush_org_x
+        cur_y = brush_org_y
+        cur_y += 1
+
+        total_l = l1len + l2len + l3len
+        print("Old pos is {}".format((brush_org_x, brush_org_y)))
+        print("Old theta is {}".format((t[0],t[1],t[2])))
+
+        # possible solution
+        if math.sqrt(pow(cur_x - originX, 2) + pow(cur_y - originY, 2)) <= total_l:
+
+             
+            
+            #t1, t2, t3 = fsolve(equations, (theta1, theta2, theta3), args=(cur_x, cur_y))
+            t = fmin_slsqp(func=distance_to_default, x0=t,eqcons=[x_constraint, y_constraint], args=([cur_x, cur_y],))
+            print(t)
+            # t1 = math.degrees(t1)
+            # t2 = math.degrees(t2)
+            # t3 = math.degrees(t3)
+            # t1 %= 360
+            # t2 %= 360
+            # t3 %= 360
+
+            # self.horizontalSlider.setValue(t1)
+            # self.horizontalSlider_2.setValue(t2)
+            # self.horizontalSlider_3.setValue(t3)
+
+            # theta1 = t1
+            # theta2 = t2
+            # theta3 = t3
+
+        # impossible solution
+        else:
+            print("impossible solution")
+
+        print("new pos is {}".format((cur_x, cur_y)))
+        print("new theta is {}".format((t[0],t[1],t[2])))
+    
+
+        self.update()
 
     def IncrY(self):
         if self.checkBox.isChecked():
             self.Paint()
-        global theta1, theta2, theta3
+        global t, theta1, theta2, theta3
 
         cur_x = brush_org_x
         cur_y = brush_org_y
@@ -218,34 +316,35 @@ class MyWindow(QtWidgets.QMainWindow):
 
         total_l = l1len + l2len + l3len
         print("Old pos is {}".format((brush_org_x, brush_org_y)))
-        print("Old theta is {}".format((theta1,theta2,theta3)))
+        print("Old theta is {}".format((t[0],t[1],t[2])))
 
         # possible solution
         if math.sqrt(pow(cur_x - originX, 2) + pow(cur_y - originY, 2)) <= total_l:
-            
-            t1, t2, t3 = fsolve(equations, (theta1, theta2, theta3), args=(cur_x, cur_y))
-            t1 = math.degrees(t1)
-            t2 = math.degrees(t2)
-            t3 = math.degrees(t3)
-            t1 %= 360
-            t2 %= 360
-            t3 %= 360
 
-            self.horizontalSlider.setValue(t1)
-            self.horizontalSlider_2.setValue(t2)
-            self.horizontalSlider_3.setValue(t3)
+            #t1, t2, t3 = fsolve(equations, (theta1, theta2, theta3), args=(cur_x, cur_y))
+            t1 = fmin_slsqp(func=distance_to_default, x0=t,eqcons=[x_constraint, y_constraint], args=([cur_x, cur_y],))
+            print(t1)
+            # t1 = math.degrees(t1)
+            # t2 = math.degrees(t2)
+            # t3 = math.degrees(t3)
+            # t1 %= 360
+            # t2 %= 360
+            # t3 %= 360
 
-            theta1 = t1
-            theta2 = t2
-            theta3 = t3
+            # self.horizontalSlider.setValue(t1)
+            # self.horizontalSlider_2.setValue(t2)
+            # self.horizontalSlider_3.setValue(t3)
+
+            # theta1 = t1
+            # theta2 = t2
+            # theta3 = t3
 
         # impossible solution
         else:
             print("impossible solution")
 
         print("new pos is {}".format((cur_x, cur_y)))
-        print("new theta is {}".format((theta1,theta2,theta3)))
-        print(equations((theta1,theta2,theta3), cur_x, cur_y))
+        print("new theta is {}".format((t[0],t[1],t[2])))
 
         self.update()
 
