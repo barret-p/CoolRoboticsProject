@@ -265,8 +265,8 @@ class MyWindow(QtWidgets.QMainWindow):
 
         # possible solution
         if math.sqrt(pow(cur_x - originX, 2) + pow(cur_y - originY, 2)) <= total_l:
-            bnds = ((0, 360), (0,360), (0,360))
-            results = opt.minimize(equations, x0=t, args=(cur_x, cur_y, 'x'),method='SLSQP', bounds=bnds, options={'gtol': 1e-6, 'disp': True})
+            bnds = ((-360, 360), (-360,360), (-360,360))
+            results = opt.minimize(equations, x0=t, args=(cur_x, cur_y, 'x'), method='SLSQP', bounds=bnds, tol=1e-6, options={'gtol': 1e-6, 'disp': True})
             print(results)
             print(results.x)
           
@@ -299,8 +299,8 @@ class MyWindow(QtWidgets.QMainWindow):
 
         # possible solution
         if math.sqrt(pow(cur_x - originX, 2) + pow(cur_y - originY, 2)) <= total_l:
-            bnds = ((-360, 360), (0,360), (0,360))
-            results = opt.minimize(equations, x0=t, args=(cur_x, cur_y, 'x'),method='SLSQP', bounds=bnds, options={'gtol': 1e-6, 'disp': True})
+            bnds = ((-360, 360), (-360,360), (-360,360))
+            results = opt.minimize(equations, x0=t, args=(cur_x, cur_y, 'x'), method='SLSQP', bounds=bnds, tol=1e-6, options={'gtol': 1e-6, 'disp': True})
             print(results)
             print(results.x)
           
@@ -334,7 +334,7 @@ class MyWindow(QtWidgets.QMainWindow):
         # possible solution
         if math.sqrt(pow(cur_x - originX, 2) + pow(cur_y - originY, 2)) <= total_l:
             bnds = ((-360, 360), (-360,360), (-360,360))
-            results = opt.minimize(equations, x0=t, args=(cur_x, cur_y, 'y'),method='SLSQP', bounds=bnds, options={'gtol': 1e-6, 'disp': True})
+            results = opt.minimize(equations, x0=t, args=(cur_x, cur_y, 'y'),method='SLSQP', bounds=bnds, tol=1e-6, options={'gtol': 1e-6, 'disp': True})
             print(results)
             print(results.x)
           
@@ -371,7 +371,7 @@ class MyWindow(QtWidgets.QMainWindow):
 
             bnds = ((-360, 360), (-360,360), (-360,360))
             
-            results = opt.minimize(equations, x0=t, args=(cur_x, cur_y, 'y'),method='SLSQP', bounds=bnds, options={'gtol': 1e-6, 'disp': True})
+            results = opt.minimize(equations, x0=t, args=(cur_x, cur_y, 'y'),method='SLSQP', bounds=bnds, tol=1e-6, options={'gtol': 1e-6, 'disp': True})
             print(results)
             print(results.x)
 
