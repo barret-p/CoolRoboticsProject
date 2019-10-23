@@ -226,8 +226,8 @@ class MyWindow(QtWidgets.QMainWindow):
         global brush_x, brush_y
         brush_x = link3_endx - brush_rad / 2
         brush_y = link3_endy - brush_rad / 2
-        #qp.setBrush(self.brushColor)--------------------------------------------------------------------------------------
-        qp.setBrush(QtGui.QColor(255,255,255))
+        qp.setBrush(self.brushColor)
+        #qp.setBrush(QtGui.QColor(255,255,255))
         qp.drawEllipse(brush_x, brush_y, brush_rad, brush_rad)
 
         #Draw paint
