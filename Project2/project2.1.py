@@ -114,7 +114,7 @@ class MyWindow(QtWidgets.QMainWindow):
     
     def __init__(self):
         super(MyWindow, self).__init__()
-        uic.loadUi('project2.ui', self)
+        uic.loadUi('project2.1.ui', self)
         self.initUI()
         self.brushColor = QtGui.QColor(255,255,255)
         
