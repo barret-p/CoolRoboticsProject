@@ -18,6 +18,7 @@ class MyWindow(QtWidgets.QMainWindow):
 
         # override window click event
         self.centralWidget.mouseReleaseEvent = self.addLight
+        self.clearLights.clicked.connect(self.clearAllLights)
 
         self.setWindowTitle('Project 3: Braitenberg Vehicles')
         self.show()
@@ -47,6 +48,10 @@ class MyWindow(QtWidgets.QMainWindow):
             y = event.pos().y()
             self.lights.append((x, y))
             self.update()
+
+    def clearAllLights(self):
+        self.lights = []
+        self.update()
 
 def main():
 
