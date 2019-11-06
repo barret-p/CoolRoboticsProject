@@ -11,8 +11,8 @@ class Vehicle:
     def __init__(self):
         self.position = (0, 0)
         self.d = 5
-        self.leftSensor = (self.x - self.d, self.y + self.d*2)
-        self.rightSensor = (self.x + self.d, self.y + self.d*2)
+        self.leftSensor = (-self.d, self.d*2)
+        self.rightSensor = (self.d, self.d*2)
         self.K = np.array([])
         self.W = np.array([])
         self.omega = 0
