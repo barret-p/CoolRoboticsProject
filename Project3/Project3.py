@@ -23,7 +23,7 @@ class Vehicle:
         self.rightSensor = self.getRightSensor()
         self.omega = 0
         self.R = 0
-        self.timestep = 1 / 10000
+        self.timestep = 16 / 1000
 
     def update(self, lights):
         """ This function should take in sensor or light values and update the
@@ -46,9 +46,7 @@ class Vehicle:
         rightSensorValue = sum([100/max(d, 1e-5) for d in rightSensorDistances])
 
         # calculate wheel velocities
-        self.W = np.matmul(self.K, np.array([[leftSensorValue], 
-                                             [rightSensorValue]]))
-        
+        self.W = np.matmul(self.K, np.array([leftSensorValue, rightSensorValue]))
         # calculate angular velocity (omega)
         diff = self.W[0] - self.W[1]
         c = 500
@@ -59,7 +57,7 @@ class Vehicle:
         # integration
         self.angle += self.omega * self.timestep
         self.position[0] += V * math.sin(math.radians(self.angle))
-        self.position[1] -= V * math.cos(math.radians(self.angle))
+        self.position[1] += V * math.cos(math.radians(self.angle))
 
         self.w1_pos = self.getLeftWheelPosition()
         self.w2_pos = self.getRightWheelPosition()
@@ -68,7 +66,7 @@ class Vehicle:
         QApplication.activeWindow().update()
 
         # reset vehicle pos
-        self.position[0] = self.position[0] % 760
+        self.position[0] = self.position[0] % 750
         self.position[1] = self.position[1] % 660
 
     def fromString(self, s):
@@ -159,7 +157,7 @@ class MyWindow(QtWidgets.QMainWindow):
         self.vehicles = self.db.getVehicles()
         self.timer = QtCore.QTimer()
         self.timer.timeout.connect(self.timerEvent)
-        self.timer.start(1000 / 60)
+        self.timer.start(16)
 
     def timerEvent(self):
         for vehicle in self.vehicles:
