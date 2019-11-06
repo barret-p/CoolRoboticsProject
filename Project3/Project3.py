@@ -11,8 +11,11 @@ class Vehicle:
     def __init__(self):
         self.position = (0, 0)
         self.d = 5
-        self.leftSensor = (-self.d, self.d*2)
-        self.rightSensor = (self.d, self.d*2)
+        self.angle = 90
+        self.leftSensor = self.getLeftSensor()
+        self.rightSensor = self.getRightSensor()
+        self.w1_pos = getLeftWheelPosition()
+        self.w2_pos = getRightWheelPosition()
         self.K = np.array([])
         self.W = np.array([])
         self.omega = 0
@@ -26,8 +29,8 @@ class Vehicle:
             np.array([[S1].  The sensor values
                       [S2]])
         """
-        self.leftSensor = getLeftSensor()
-        self.rightSensor = getRightSensor()
+        self.leftSensor = self.getLeftSensor()
+        self.rightSensor = self.getRightSensor()
         
         leftSensorDistances = []
         rightSensorDistances = []
@@ -58,22 +61,38 @@ class Vehicle:
             string s: formatted as x, y, k11, k12, k21, k22
         """
         vars = s.replace(',', '').split()
-        self.x = vars[0]
-        self.y = vars[1]
-        self.K = np.array([[vars[2], vars[3]], 
-                           [vars[4], vars[5]]])
+        self.position = (int(vars[0], int(vars[1])))
+        self.K = np.array([[int(vars[2]), int(vars[3])], 
+                           [int(vars[4]), int(vars[5])]])
         
     def getDistance(sensor, lightSource):
         horizontal = (lightSource[0] - sensor[0])**2
         vertical = (lightSource[1] - sensor[1])**2
         
         return math.sqrt(horizontal + vertical)
+
+    def getLeftWheelPosition(self):
+        x =  self.d * math.cos(math.radians(self.angle)) + self.position[0]
+        y = -self.d * math.sin(math.radians(self.angle)) + self.position[1]
+        return (x,y)
     
-    def getLeftSensor():
-        return (self.x - self.d, self.y + self.d*2)
+    def getRightWheelPosition(self):
+        x = -self.d * math.cos(math.radians(self.angle)) + self.position[0]
+        y =  self.d * math.sin(math.radians(self.angle)) + self.position[1]
+        return (x,y)
+
+    def getLeftSensor(self):
+        return (-self.d * math.cos(math.radians(self.position[0])), self.d * math.cos(math.radians(self.position[1])))
     
-    def getRightSensor():
-        return (self.x + self.d, self.y + self.d*2)
+    def getRightSensor(self):
+        return (self.d * math.cos(math.radians(self.position[0])), self.d * math.cos(math.radians(self.position[1])))
+
+    def paint(self, qp):
+        qp.drawLines(self.w1_pos, self.w2_pos)
+        qp.drawLines(self.w2_pos, self.rightSensor)
+        qp.drawLines(self.rightSensor, self.leftSensor)
+        qp.drawLines(self.leftSensor, self.w1_pos)
+
 
     def __repr__(self):
         """ Sets the printing format to use print(Vehicle). """
