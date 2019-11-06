@@ -40,6 +40,7 @@ class Vehicle:
         for light in lights:
             leftSensorDistances.append(self.getDistance(self.leftSensor, light))
             rightSensorDistances.append(self.getDistance(self.rightSensor, light))
+        
         leftSensorValue = sum([100/max(d, 1e-5) for d in leftSensorDistances])
         rightSensorValue = sum([100/max(d, 1e-5) for d in rightSensorDistances])
 
@@ -48,15 +49,13 @@ class Vehicle:
                                              [rightSensorValue]]))
         
         # calculate angular velocity (omega)
-        diff = self.W[0] - self.W[1]
-        self.omega = diff/(2*self.d)
-        if diff == 0:
-            self.R = self.d*sum(self.W)/0.000000001
-        else:
-            self.R = self.d*sum(self.W)/diff
+        diff = self.W[0][0] - self.W[1][0]
+        
+        self.omega = diff/(2*self.d) * 100
+        self.R = self.d*sum(self.W)/max(diff, 1e-5)
 
-        V = (self.W[0] + self.W[1]) / 2
-
+        V = (self.W[0][0] + self.W[1][0]) / 2
+        
         # integration
         self.angle += self.omega * self.timestep
         self.position[0] += V * math.sin(math.radians(self.angle))
