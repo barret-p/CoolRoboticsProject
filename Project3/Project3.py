@@ -23,7 +23,7 @@ class Vehicle:
         self.rightSensor = self.getRightSensor()
         self.omega = 0
         self.R = 0
-        self.timestep = 16.666 / 1000
+        self.timestep = 1 / 10000
 
     def update(self, lights):
         """ This function should take in sensor or light values and update the
@@ -33,6 +33,8 @@ class Vehicle:
             np.array([[S1].  The sensor values
                       [S2]])
         """
+        self.leftSensor = self.getLeftSensor()
+        self.rightSensor = self.getRightSensor()
         leftSensorDistances = []
         rightSensorDistances = []
         
@@ -49,18 +51,15 @@ class Vehicle:
         
         # calculate angular velocity (omega)
         diff = self.W[0] - self.W[1]
-        self.omega = diff/(2*self.d)
-        if diff == 0:
-            self.R = self.d*sum(self.W)/0.000000001
-        else:
-            self.R = self.d*sum(self.W)/diff
-
+        c = 500
+        self.omega = c * diff / (2 * self.d)
+        self.R = self.d * sum(self.W) / (max(diff, 1e-5))
         V = (self.W[0] + self.W[1]) / 2
 
         # integration
         self.angle += self.omega * self.timestep
         self.position[0] += V * math.sin(math.radians(self.angle))
-        self.position[1] += V * math.cos(math.radians(self.angle))
+        self.position[1] -= V * math.cos(math.radians(self.angle))
 
         self.w1_pos = self.getLeftWheelPosition()
         self.w2_pos = self.getRightWheelPosition()
@@ -68,6 +67,9 @@ class Vehicle:
         self.rightSensor = self.getRightSensor()
         QApplication.activeWindow().update()
 
+        # reset vehicle pos
+        self.position[0] = self.position[0] % 760
+        self.position[1] = self.position[1] % 660
 
     def fromString(self, s):
         """Sets the vehicle's variables from an input string.
@@ -157,7 +159,7 @@ class MyWindow(QtWidgets.QMainWindow):
         self.vehicles = self.db.getVehicles()
         self.timer = QtCore.QTimer()
         self.timer.timeout.connect(self.timerEvent)
-        self.timer.start(100)
+        self.timer.start(1000 / 60)
 
     def timerEvent(self):
         for vehicle in self.vehicles:
