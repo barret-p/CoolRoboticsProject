@@ -25,7 +25,7 @@ class Vehicle:
         self.R = 0
         self.timestep = 16 / 1000
 
-    def update(self, lights):
+    def update(self, lights, window):
         """ This function should take in sensor or light values and update the
         position and K values
         
@@ -63,7 +63,7 @@ class Vehicle:
         self.w2_pos = self.getRightWheelPosition()
         self.leftSensor = self.getLeftSensor()
         self.rightSensor = self.getRightSensor()
-        QApplication.activeWindow().update()
+        window.update()
 
         # reset vehicle pos
         self.position[0] = self.position[0] % 750
@@ -161,7 +161,7 @@ class MyWindow(QtWidgets.QMainWindow):
 
     def timerEvent(self):
         for vehicle in self.vehicles:
-            vehicle.update(self.lights)
+            vehicle.update(self.lights, self)
 
     def initUI(self):
 
