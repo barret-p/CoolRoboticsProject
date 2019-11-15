@@ -439,6 +439,7 @@ class MyWindow(QtWidgets.QMainWindow):
         #print("new theta is {}".format((t[0],t[1],t[2])))
         #print("------------------------------------------------------------------------------")
 
+        self.updateSliderValues()
         self.update()
 
     def IncrX(self):
@@ -543,7 +544,7 @@ class MyWindow(QtWidgets.QMainWindow):
                 t[0] += 30
                 
         
-        
+        self.updateSliderValues()
         self.update()
 
     def DecrY(self):
@@ -647,7 +648,7 @@ class MyWindow(QtWidgets.QMainWindow):
                 print("actually impossible")
                 t[0] += 30
                 
-
+        self.updateSliderValues()
         self.update()
 
     def IncrY(self):
@@ -751,7 +752,7 @@ class MyWindow(QtWidgets.QMainWindow):
                 print("actually impossible")
                 t[0] += 30
                 
-
+        self.updateSliderValues()
         self.update()
 
     def updateSliderRanges(self, delta, num_sliders):
