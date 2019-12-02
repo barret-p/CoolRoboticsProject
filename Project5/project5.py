@@ -243,7 +243,7 @@ class Box(UIItem):
         return Point(self.x + self.size[0], self.y + self.size[1]/2)
     
     def draw(self, painter):
-        painter.setBrush(QtCore.Qt.black)
+        painter.setBrush(QtCore.Qt.darkGray)
         painter.drawRect(self.X + self.x, self.Y + self.y, self.size[0], self.size[1])
         
 class Robot(UIItem):
@@ -259,9 +259,9 @@ class Robot(UIItem):
         return [self.x, self.y]
     
     def draw(self, painter):
-        painter.setBrush(QtCore.Qt.green)
+        painter.setBrush(QtCore.Qt.white)
         painter.drawEllipse(self.X + self.x, self.Y + self.y, self.size[0], self.size[1])
-        painter.setBrush(QtCore.Qt.red)
+        painter.setBrush(QtCore.Qt.black)
         painter.drawEllipse(self.X + self.x_end, self.y + self.y_end, self.size[0], self.size[1])
         
 class VerticalLine(UIItem):
