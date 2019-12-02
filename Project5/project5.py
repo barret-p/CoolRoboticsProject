@@ -176,13 +176,17 @@ def shortestPath(G,start,end):
     #def __repr__(self):
         #return "hline_" + str(self.posy)
 
-#class PathLine:
-    #def __init__(self,posx1,posy1, posx2, posy2):
-        #self.posx1 = posx1
-        #self.posx2 = posx2
-        #self.posy1 = posy1
-        #self.posy2 = posy2
-        #self.name = "path"
+# class PathLine:
+#     def __init__(self,x1,y1, x2, y2):
+#         self.x1 = x1
+#         self.x2 = x2
+#         self.y1 = y1
+#         self.y2 = y2
+#         # self.name = "path"
+
+#     def draw(self, painter):
+#         painter.setBrush(QtCore.Qt.black)
+#         painter.drawLine(self.x1, self.y1, self.x2, self.y2)
 
 #class Cell:
     #def __init__(self,posx,posy,sizex,sizey):
@@ -217,11 +221,11 @@ class Point:
         self.x = x
         self.y = y
         
-    def __eq__(self, right):
-        return (self.x , self.y) == (right.x, right.y)
+    def __eq__(self, other):
+        return (self.x , self.y) == (other.x, other.y)
     
-    def __lt__(self, right):
-        return (self.x, self.y) < (right.x , right.y)
+    def __lt__(self, other):
+        return (self.x, self.y) < (other.x , other.y)
     
 class Box(UIItem):
     def __init__(self, x, y, size):
@@ -275,7 +279,7 @@ class VerticalLine(UIItem):
         return [self.x, (self.y1-self.y2)/2 + self.y1]
     
     def draw(self, painter):
-        painter.setPen(QtGUI.QPen(QtCore.QT.black, 1, QtCore.Qt.DashLine))
+        painter.setPen(QtGui.QPen(QtCore.Qt.black, 1, QtCore.Qt.DashLine))
         painter.drawLine(self.X + self.x, self.Y + self.y1, self.X + self.x, self.Y + self.y2)
         
 class HorizontalLine(UIItem):
@@ -303,7 +307,7 @@ class Path(UIItem):
         
 class Cell(Box):
     def isAdjacent(self, point):
-        if point in [self.getTop(), self.getBottom(), self.getLeft(), self.getRight]:
+        if point in [self.getTop(), self.getBottom(), self.getLeft(), self.getRight()]:
             return True
         
         return False
@@ -346,8 +350,8 @@ class MyWindow(QtWidgets.QMainWindow):
 
     def addItem(self, event):
         global items, originX, originY
-        posx = event.pos().x() - originX
-        posy = event.pos().y() - originY
+        x = event.pos().x() - originX
+        y = event.pos().y() - originY
 
         if self.mouseEntryCheckBox.isChecked():
             if self.robotStartRadioButton.isChecked():
@@ -355,39 +359,39 @@ class MyWindow(QtWidgets.QMainWindow):
                 for item in items:
                     if isinstance(item, Robot):
                         addItem = False
-                        item.x = posx
-                        item.y = posy
+                        item.x = x
+                        item.y = y
                 if addItem:
-                    robot = Robot(posx, posy, 0, 0)
+                    robot = Robot(x, y, 0, 0)
                     items.append(robot)
 
-                self.lineEditRobotX.setText(str(posx))
-                self.lineEditRobotY.setText(str(posy))
+                self.lineEditRobotX.setText(str(x))
+                self.lineEditRobotY.setText(str(y))
             elif self.robotEndRadioButton.isChecked():
                 addItem = True
                 for item in items:
                     if isinstance(item, Robot):
                         addItem = False
-                        item.posxend = posx
-                        item.posyend = posy
+                        item.posxend = x
+                        item.posyend = y
                 if addItem:
-                    robot = Robot(0, 0, posx, posy)
+                    robot = Robot(0, 0, x, y)
                     items.append(robot)
 
-                self.lineEditRobotXend.setText(str(posx))
-                self.lineEditRobotYend.setText(str(posy))
+                self.lineEditRobotXend.setText(str(x))
+                self.lineEditRobotYend.setText(str(y))
             elif self.block1RadioButton.isChecked():
-                self.AddBlock(posx, posy, 200, 200, "box200")
-                self.lineEditBlockX_1.setText(str(posx))
-                self.lineEditBlockY_1.setText(str(posy))
+                self.AddBlock(x, y, 200, 200, "box200")
+                self.lineEditBlockX_1.setText(str(x))
+                self.lineEditBlockY_1.setText(str(y))
             elif self.block2RadioButton.isChecked():
-                self.AddBlock(posx, posy, 150, 150, "box150")
-                self.lineEditBlockX_2.setText(str(posx))
-                self.lineEditBlockY_2.setText(str(posy))
+                self.AddBlock(x, y, 150, 150, "box150")
+                self.lineEditBlockX_2.setText(str(x))
+                self.lineEditBlockY_2.setText(str(y))
             elif self.block3RadioButton.isChecked():
-                self.AddBlock(posx, posy, 100, 100, "box100")
-                self.lineEditBlockX_3.setText(str(posx))
-                self.lineEditBlockY_3.setText(str(posy))
+                self.AddBlock(x, y, 100, 100, "box100")
+                self.lineEditBlockX_3.setText(str(x))
+                self.lineEditBlockY_3.setText(str(y))
             else:
                 pass
 
@@ -571,7 +575,7 @@ class MyWindow(QtWidgets.QMainWindow):
 
         print("Midpoints to solution:")
         for index in range(len(path) - 1):
-            p = PathLine(midpoints[path[index]].x, midpoints[path[index]].y, midpoints[path[index+1]].x, midpoints[path[index+1]].y)
+            p = Path(midpoints[path[index]].x, midpoints[path[index]].y, midpoints[path[index+1]].x, midpoints[path[index+1]].y)
             items.append(p)
 
         print(path)
