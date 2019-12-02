@@ -3,7 +3,8 @@ from functools import total_ordering
 from PyQt5 import QtGui, uic, QtCore, QtWidgets
 from priodict import priorityDictionary
 
-items_dict = {'robot': None, 'box100': None, 'box150': None, 'box200': None, 'HorizontalLines': [], 'VerticalLines': [] }
+items_dict = {'robot': None, 'box100': None, 'box150': None, 'box200': None,
+              'HorizontalLines': [], 'VerticalLines': [], 'Path': [] }
 items = []
 originX = 20
 originY = 20
@@ -284,7 +285,7 @@ class VerticalLine(UIItem):
         painter.drawLine(self.X + self.x, self.Y + self.y1, self.X + self.x, self.Y + self.y2)
         
 class HorizontalLine(UIItem):
-    def __init__(self, x1, y, x2):
+    def __init__(self, x1, x2, y):
         UIItem.__init__(self)
         self.x1 = x1
         self.y = y
@@ -565,7 +566,7 @@ class MyWindow(QtWidgets.QMainWindow):
         #         midpoints.append(Point(item.x,item.y))
         #         midpoints.append(Point(item.x_end,item.y_end))
         robot = items_dict['robot']
-        midpoints.append(Point(robot.x, robot.y,))
+        midpoints.append(Point(robot.x, robot.y))
         midpoints.append(Point(robot.x_end, robot.y_end))
 
         for point in cellmidpoints: #Remove points that touch boxes
@@ -600,7 +601,7 @@ class MyWindow(QtWidgets.QMainWindow):
         print("Midpoints to solution:")
         for index in range(len(path) - 1):
             p = Path(midpoints[path[index]].x, midpoints[path[index]].y, midpoints[path[index+1]].x, midpoints[path[index+1]].y)
-            items.append(p)
+            items_dict['Path'].append(p)
 
         print(path)
         print('plotted')
