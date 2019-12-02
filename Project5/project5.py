@@ -279,7 +279,7 @@ class VerticalLine(UIItem):
         return [self.x, (self.y1-self.y2)/2 + self.y1]
     
     def draw(self, painter):
-        painter.setPen(QtGui.QPen(QtCore.Qt.black, 1, QtCore.Qt.DashLine))
+        painter.setPen(QtGui.QPen(QtCore.Qt.gray, 1, QtCore.Qt.SolidLine))
         painter.drawLine(self.X + self.x, self.Y + self.y1, self.X + self.x, self.Y + self.y2)
         
 class HorizontalLine(UIItem):
@@ -290,7 +290,7 @@ class HorizontalLine(UIItem):
         self.x2 = x2
         
     def draw(self, painter):
-        painter.setPen(QtGui.QPen(QtCore.Qt.black, 1, QtCore.Qt.DashLine))
+        painter.setPen(QtGui.QPen(QtCore.Qt.gray, 1, QtCore.Qt.SolidLine))
         painter.drawLine(self.X + self.x1, self.Y + self.y, self.X + self.x2, self.Y + self.y)
         
 class Path(UIItem):
