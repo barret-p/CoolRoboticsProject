@@ -2,6 +2,7 @@ import sys, math, pprint, collections
 from functools import total_ordering
 from PyQt5 import QtGui, uic, QtCore, QtWidgets
 from priodict import priorityDictionary
+from itertools import groupby
 
 items_dict = {'robot': None, 'box100': None, 'box150': None, 'box200': None,
               'HorizontalLines': [], 'VerticalLines': [], 'Path': [] }
@@ -555,24 +556,27 @@ class MyWindow(QtWidgets.QMainWindow):
         print("Number of cells: " + str(len(cells)))
 
         #Get list of midpoints
-        boxmidpoints = []
-        cellmidpoints = []
+        all_cells = []
         for box in boxes:
-            boxmidpoints.append(box.getTop())
-            boxmidpoints.append(box.getBottom())
-            boxmidpoints.append(box.getLeft())
-            boxmidpoints.append(box.getRight())
-        # for cell in cells:
-        #     cellmidpoints.append(cell.getTop())
-        #     cellmidpoints.append(cell.getBottom())
-        #     cellmidpoints.append(cell.getLeft())
-        #     cellmidpoints.append(cell.getRight())
+            all_cells.append((box.getCenter(), False))
+        
         for cell in cells:
-            cellmidpoints.append(cell.getCenter())
-
-        cellmidpoints = sorted(uniquify(cellmidpoints))
-
-        tempmidpoints = []
+            all_cells.append((cell.getCenter(), True))
+        
+        all_cells.sort(key = lambda x: x[0].y)
+        
+        board_matrix = [[all_cells[0]]]
+        idx = 0
+        
+        for cell in all_cells[1:]:
+            if cell[0].y == board_matrix[idx][0][0].y:
+                board_matrix[idx].append(cell)
+            else:
+                idx += 1
+                board_matrix.append([cell])
+        
+        print(board_matrix)
+        
         midpoints = []
         # for item in items:  #Add robot positions to graph
         #     if isinstance(item, Robot):
