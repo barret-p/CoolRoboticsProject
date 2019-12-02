@@ -71,7 +71,6 @@ def generateGraph(midpoints,cells):
     return graph
 
 def Dijkstra(G,start,end=None):
-    
     D = {}  # dictionary of final distances
     P = {}  # dictionary of predecessors
     Q = priorityDictionary()    # estimated distances of non-final vertices
@@ -115,98 +114,199 @@ def shortestPath(G,start,end):
     Path.reverse()
     return Path
 
-@total_ordering
+#@total_ordering
+#class Point:
+    #def __init__(self,x1,y1):
+        #self.x = x1
+        #self.y = y1
+    #def __repr__(self):
+        #return "[" + str(self.x) + "," + str(self.y) + "]"
+    #def __eq__(self,other):
+        #return (self.x,self.y)==(other.x,other.y)
+    #def __lt__(self,other):
+        #return (self.x,self.y) < (other.x,other.y)
+
+#class Block:
+    #def __init__(self,posx,posy,sizex,sizey):
+        #self.sizex = sizex
+        #self.sizey = sizey
+        #self.posx = posx
+        #self.posy = posy
+        #self.name = "box" + str(sizex)
+        #print('initializing box')
+    #def top(self):
+        #return Point(self.posx + self.sizex/2, self.posy)
+    #def bottom(self):
+        #return Point(self.posx + self.sizex/2, self.posy + self.sizey)
+    #def left(self):
+        #return Point(self.posx, self.posy + self.sizey/2)
+    #def right(self):
+        #return Point(self.posx + self.sizex, self.posy + self.sizey/2)
+
+#class Robot:
+    #def __init__(self,posx,posy,posxend,posyend):
+        #self.posx = posx
+        #self.posy = posy
+        #self.posxend = posxend
+        #self.posyend = posyend
+        #self.sizex = 10
+        #self.sizey = 10
+        #self.name = "robot"
+        #print('initializing robot')
+        #def getPosition(self):
+            #return [posx,posy]
+
+#class VerticalLine:
+    #def __init__(self,posx,posy1,posy2):
+        #self.posx = posx
+        #self.posy1 = posy1
+        #self.posy2 = posy2
+        #self.name = "verticalline"
+    #def getMidpoint(self):
+        #return [posx, (posy1-posy2)/2 + posy1]  #Double check this
+    #def __repr__(self):
+        #return "vline_" + str(self.posx)
+
+#class HorizonalLine:
+    #def __init__(self,posx1,posx2,posy):
+        #self.posx1 = posx1
+        #self.posx2 = posx2
+        #self.posy = posy
+        #self.name = "horizonalline"
+    #def __repr__(self):
+        #return "hline_" + str(self.posy)
+
+#class PathLine:
+    #def __init__(self,posx1,posy1, posx2, posy2):
+        #self.posx1 = posx1
+        #self.posx2 = posx2
+        #self.posy1 = posy1
+        #self.posy2 = posy2
+        #self.name = "path"
+
+#class Cell:
+    #def __init__(self,posx,posy,sizex,sizey):
+        #self.sizex = sizex
+        #self.sizey = sizey
+        #self.posx = posx
+        #self.posy = posy
+        #self.name = "cell"
+    #def __repr__(self):
+        #return "cell_[" + str(self.posx)+ "," + str(self.posy) + "]"
+    #def top(self):
+        #return Point(self.posx + self.sizex/2, self.posy)
+    #def bottom(self):
+        #return Point(self.posx + self.sizex/2, self.posy + self.sizey)
+    #def left(self):
+        #return Point(self.posx, self.posy + self.sizey/2)
+    #def right(self):
+        #return Point(self.posx + self.sizex, self.posy + self.sizey/2)
+    #def isAdjacent(self,point):
+        #if point == self.top() or point == self.bottom() or point == self.left() or point == self.right():
+            #return True
+        #else:
+            #return False
+            
+class UIItem:
+    def __init__(self):
+        self.X = 20
+        self.Y = 20
+        
 class Point:
-    def __init__(self,x1,y1):
-        self.x = x1
-        self.y = y1
-    def __repr__(self):
-        return "[" + str(self.x) + "," + str(self.y) + "]"
-    def __eq__(self,other):
-        return (self.x,self.y)==(other.x,other.y)
-    def __lt__(self,other):
-        return (self.x,self.y) < (other.x,other.y)
-
-class Block:
-    def __init__(self,posx,posy,sizex,sizey):
-        self.sizex = sizex
-        self.sizey = sizey
-        self.posx = posx
-        self.posy = posy
-        self.name = "box" + str(sizex)
-        print('initializing box')
-    def top(self):
-        return Point(self.posx + self.sizex/2, self.posy)
-    def bottom(self):
-        return Point(self.posx + self.sizex/2, self.posy + self.sizey)
-    def left(self):
-        return Point(self.posx, self.posy + self.sizey/2)
-    def right(self):
-        return Point(self.posx + self.sizex, self.posy + self.sizey/2)
-
-class Robot:
-    def __init__(self,posx,posy,posxend,posyend):
-        self.posx = posx
-        self.posy = posy
-        self.posxend = posxend
-        self.posyend = posyend
-        self.sizex = 10
-        self.sizey = 10
-        self.name = "robot"
-        print('initializing robot')
-        def getPosition(self):
-            return [posx,posy]
-
-class VerticalLine:
-    def __init__(self,posx,posy1,posy2):
-        self.posx = posx
-        self.posy1 = posy1
-        self.posy2 = posy2
-        self.name = "verticalline"
+    def __init__(self, x, y):
+        self.x = x
+        self.y = y
+        
+    def __eq__(self, right):
+        return (self.x , self.y) == (right.x, right.y)
+    
+    def __lt__(self, right):
+        return (self.x, self.y) < (right.x , right.y)
+    
+class Box(UIItem):
+    def __init__(self, x, y, size):
+        UIItem.__init__(self)
+        self.x = x
+        self.y = y
+        self.size = size
+        
+    def getTop(self):
+        return Point(self.x + self.size[0]/2, self.y)
+    
+    def getBottom(self):
+        return Point(self.x + self.size[0]/2, self.y + self.size[1])
+    
+    def getLeft(self):
+        return Point(self.x, self.y + self.size[1]/2)
+    
+    def getRight(self):
+        return Point(self.x + self.size[0], self.y + self.size[1]/2)
+    
+    def draw(self, painter):
+        painter.setBrush(QtCore.Qt.black)
+        painter.drawRect(self.X + self.x, self.Y + self.y, self.size[0], self.size[1])
+        
+class Robot(UIItem):
+    def __init__(self, x_start, y_start, x_end, y_end):
+        UIItem.__init__(self)
+        self.x = x_start
+        self.y = y_start
+        self.x_end = x_end
+        self.y_end = y_end
+        self.size = [10, 10]
+        
+    def getPosition(self):
+        return [self.x, self.y]
+    
+    def draw(self, painter):
+        painter.setBrush(QtCore.Qt.green)
+        painter.drawEllipse(self.X + self.x, self.Y + self.y, self.size[0], self.size[1])
+        painter.setBrush(QtCore.Qt.red)
+        painter.drawEllipse(self.X + self.x_end, self.y + self.y_end, self.size[0], self.size[1])
+        
+class VerticalLine(UIItem):
+    def __init__(self, x, y1, y2):
+        UIItem.__init__(self)
+        self.x = x
+        self.y1 = y1
+        self.y2 = y2
+        
     def getMidpoint(self):
-        return [posx, (posy1-posy2)/2 + posy1]  #Double check this
-    def __repr__(self):
-        return "vline_" + str(self.posx)
-
-class HorizonalLine:
-    def __init__(self,posx1,posx2,posy):
-        self.posx1 = posx1
-        self.posx2 = posx2
-        self.posy = posy
-        self.name = "horizonalline"
-    def __repr__(self):
-        return "hline_" + str(self.posy)
-
-class PathLine:
-    def __init__(self,posx1,posy1, posx2, posy2):
-        self.posx1 = posx1
-        self.posx2 = posx2
-        self.posy1 = posy1
-        self.posy2 = posy2
-        self.name = "path"
-
-class Cell:
-    def __init__(self,posx,posy,sizex,sizey):
-        self.sizex = sizex
-        self.sizey = sizey
-        self.posx = posx
-        self.posy = posy
-        self.name = "cell"
-    def __repr__(self):
-        return "cell_[" + str(self.posx)+ "," + str(self.posy) + "]"
-    def top(self):
-        return Point(self.posx + self.sizex/2, self.posy)
-    def bottom(self):
-        return Point(self.posx + self.sizex/2, self.posy + self.sizey)
-    def left(self):
-        return Point(self.posx, self.posy + self.sizey/2)
-    def right(self):
-        return Point(self.posx + self.sizex, self.posy + self.sizey/2)
-    def isAdjacent(self,point):
-        if point == self.top() or point == self.bottom() or point == self.left() or point == self.right():
+        return [self.x, (self.y1-self.y2)/2 + self.y1]
+    
+    def draw(self, painter):
+        painter.setPen(QtGUI.QPen(QtCore.QT.black, 1, QtCore.Qt.DashLine))
+        painter.drawLine(self.X + self.x, self.Y + self.y1, self.X + self.x, self.Y + self.y2)
+        
+class HorizontalLine(UIItem):
+    def __init__(self, x1, y, x2):
+        UIItem.__init__(self)
+        self.x1 = x1
+        self.y = y
+        self.x2 = x2
+        
+    def draw(self, painter):
+        painter.setPen(QtGui.QPen(QtCore.Qt.black, 1, QtCore.Qt.DashLine))
+        painter.drawLine(self.X + self.x1, self.Y + self.y, self.X + self.x2, self.Y + self.y)
+        
+class Path(UIItem):
+    def __init__(self, x1, y1, x2, y2):
+        UIItem.__init__(self)
+        self.x1 = x1
+        self.y1 = y1
+        self.x2 = x2
+        self.y2 = y2
+        
+    def draw(self, painter):
+        painter.setPen(QtGui.QPen(QtCore.Qt.red, 2, QtCore.Qt.SolidLine))
+        painter.drawLine(self.X + self.x1, self.Y + self.y1, self.X + self.x2, self.Y + self.y2)
+        
+class Cell(Box):
+    def isAdjacent(self, point):
+        if point in [self.getTop(), self.getBottom(), self.getLeft(), self.getRight]:
             return True
-        else:
-            return False
+        
+        return False
         
 class MyWindow(QtWidgets.QMainWindow):
     def __init__(self):
@@ -242,23 +342,7 @@ class MyWindow(QtWidgets.QMainWindow):
         qp.drawRect(originX, originY, originX+500, originY+500)
 
         for item in items:
-            if item.name == "robot":
-                qp.setBrush(QtCore.Qt.green)
-                qp.drawEllipse(originX+item.posx, originY+item.posy, item.sizex, item.sizey)
-                qp.setBrush(QtCore.Qt.red)
-                qp.drawEllipse(originX+item.posxend, originY+item.posyend, item.sizex, item.sizey)
-            elif item.name == "verticalline":
-                qp.setPen(QtGui.QPen(QtCore.Qt.black, 1, QtCore.Qt.DashLine))
-                qp.drawLine(originX+item.posx, originY+item.posy1, originX+item.posx, originY+item.posy2)
-            elif item.name == "horizonalline":
-                qp.setPen(QtGui.QPen(QtCore.Qt.black, 1, QtCore.Qt.DashLine))
-                qp.drawLine(originX+item.posx1, originY+item.posy, originX+item.posx2, originY+item.posy)
-            elif item.name == "path":
-                qp.setPen(QtGui.QPen(QtCore.Qt.red, 2, QtCore.Qt.SolidLine))
-                qp.drawLine(originX+item.posx1, originY+item.posy1, originX+item.posx2, originY+item.posy2)
-            else:   #Else draw the boxes
-                qp.setBrush(QtCore.Qt.black)
-                qp.drawRect(originX+item.posx, originY+item.posy, item.sizex, item.sizey)                
+            item.draw(qp)                
 
     def addItem(self, event):
         global items, originX, originY
@@ -269,7 +353,7 @@ class MyWindow(QtWidgets.QMainWindow):
             if self.robotStartRadioButton.isChecked():
                 addItem = True
                 for item in items:
-                    if item.name == "robot":
+                    if isinstance(item, Robot):
                         addItem = False
                         item.posx = posx
                         item.posy = posy
@@ -282,7 +366,7 @@ class MyWindow(QtWidgets.QMainWindow):
             elif self.robotEndRadioButton.isChecked():
                 addItem = True
                 for item in items:
-                    if item.name == "robot":
+                    if isinstance(item, Robot):
                         addItem = False
                         item.posxend = posx
                         item.posyend = posy
@@ -320,7 +404,7 @@ class MyWindow(QtWidgets.QMainWindow):
 
         #if item already created, don't create new item. Modify existing item
         for item in items:
-            if item.name == "robot":
+            if isinstance(item, Robot):
                 addItem = False
                 item.posx = posx
                 item.posy = posy
@@ -350,18 +434,18 @@ class MyWindow(QtWidgets.QMainWindow):
 
         self.AddBlock(posx, posy, 100, 100, "box100")
 
-    def AddBlock(self, posx, posy, sizex, sizey, name):
+    def AddBlock(self, posx, posy, sizex, sizey, obj):
         global items
         addItem = True
 
         for item in items:
-            if item.name == name:
+            if isinstance(item, Box):
                 addItem = False
                 item.posx = posx
                 item.posy = posy
 
         if addItem == True:
-            box = Block(posx, posy, sizex, sizey)
+            box = Box(posx, posy, [sizex, sizey])
             items.append(box)
 
         self.update()
@@ -374,7 +458,8 @@ class MyWindow(QtWidgets.QMainWindow):
 
     def RemovePath(self):
         global items
-        items = [item for item in items if (item.name == "robot" or item.name[:3] == "box")]
+        items = [item for item in items if isinstance(item, Robot) or isinstance(item, Box)]
+        
         self.removePathNotFound()
         self.update()
 
@@ -390,7 +475,7 @@ class MyWindow(QtWidgets.QMainWindow):
         global items
         boxes = []
         for item in items:
-            if item.name[:3] == "box":
+            if isinstance(item, Box):
                 boxes.append(item)
 
         items.append(VerticalLine(0,0,maxY))
@@ -407,9 +492,9 @@ class MyWindow(QtWidgets.QMainWindow):
         hlines = []
         vlines = []
         for item in items:
-            if item.name == "horizonalline":
+            if isinstance(item, HorizontalLine):
                 hlines.append(item)
-            if item.name == "verticalline":
+            if isinstance(item, VerticalLine):
                 vlines.append(item)
         vlines = sorted(vlines, key = x_key)
         hlines = sorted(hlines, key = y_key)
@@ -436,22 +521,22 @@ class MyWindow(QtWidgets.QMainWindow):
         boxmidpoints = []
         cellmidpoints = []
         for box in boxes:
-            boxmidpoints.append(box.top())
-            boxmidpoints.append(box.bottom())
-            boxmidpoints.append(box.left())
-            boxmidpoints.append(box.right())
+            boxmidpoints.append(box.getTop())
+            boxmidpoints.append(box.getBottom())
+            boxmidpoints.append(box.getLeft())
+            boxmidpoints.append(box.getRight())
         for cell in cells:
-            cellmidpoints.append(cell.top())
-            cellmidpoints.append(cell.bottom())
-            cellmidpoints.append(cell.left())
-            cellmidpoints.append(cell.right())
+            cellmidpoints.append(cell.getTop())
+            cellmidpoints.append(cell.getBottom())
+            cellmidpoints.append(cell.getLeft())
+            cellmidpoints.append(cell.getRight())
 
         cellmidpoints = sorted(uniquify(cellmidpoints))
 
         tempmidpoints = []
         midpoints = []
         for item in items:  #Add robot positions to graph
-            if item.name=="robot":
+            if isinstance(item, Robot):
                 midpoints.append(Point(item.posx,item.posy))
                 midpoints.append(Point(item.posxend,item.posyend))
 
