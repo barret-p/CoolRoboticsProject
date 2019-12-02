@@ -13,10 +13,10 @@ def distance(x1,y1,x2,y2):
     return math.sqrt((y2-y1)**2 + (x2-x1)**2)
 
 def y_key(hline):
-    return hline.posy
+    return hline.y
 
 def x_key(vline):
-    return vline.posx
+    return vline.x
 
 def uniquify(li):
     checked = []
@@ -247,10 +247,10 @@ class Box(UIItem):
         painter.drawRect(self.X + self.x, self.Y + self.y, self.size[0], self.size[1])
         
 class Robot(UIItem):
-    def __init__(self, x_start, y_start, x_end, y_end):
+    def __init__(self, x, y, x_end, y_end):
         UIItem.__init__(self)
-        self.x = x_start
-        self.y = y_start
+        self.x = x
+        self.y = y
         self.x_end = x_end
         self.y_end = y_end
         self.size = [10, 10]
@@ -355,8 +355,8 @@ class MyWindow(QtWidgets.QMainWindow):
                 for item in items:
                     if isinstance(item, Robot):
                         addItem = False
-                        item.posx = posx
-                        item.posy = posy
+                        item.x = posx
+                        item.y = posy
                 if addItem:
                     robot = Robot(posx, posy, 0, 0)
                     items.append(robot)
@@ -479,14 +479,14 @@ class MyWindow(QtWidgets.QMainWindow):
                 boxes.append(item)
 
         items.append(VerticalLine(0,0,maxY))
-        items.append(HorizonalLine(0,maxX,0))
+        items.append(HorizontalLine(0,maxX,0))
         items.append(VerticalLine(maxX,0,maxY))
-        items.append(HorizonalLine(0,maxX,maxY))
+        items.append(HorizontalLine(0,maxX,maxY))
         for box in boxes:
-            items.append(VerticalLine(box.posx, 0, maxY))
-            items.append(VerticalLine(box.posx+box.sizex, 0, maxY))
-            items.append(HorizonalLine(0, maxX, box.posy))
-            items.append(HorizonalLine(0, maxX, box.posy+box.sizey))
+            items.append(VerticalLine(box.x, 0, maxY))
+            items.append(VerticalLine(box.x+box.size[0], 0, maxY))
+            items.append(HorizontalLine(0, maxX, box.y))
+            items.append(HorizontalLine(0, maxX, box.y+box.size[1]))
 
         #Sort Lines
         hlines = []
@@ -503,17 +503,17 @@ class MyWindow(QtWidgets.QMainWindow):
         cells = []
         for i in range(0,len(vlines)-1):
             for j in range(0,len(hlines)-1):
-                xpos = vlines[i].posx
-                ypos = hlines[j].posy
-                xsize = vlines[i+1].posx - vlines[i].posx
-                ysize = hlines[j+1].posy - hlines[j].posy
-                cells.append(Cell(xpos,ypos,xsize,ysize))
+                xpos = vlines[i].x
+                ypos = hlines[j].y
+                xsize = vlines[i+1].x - vlines[i].x
+                ysize = hlines[j+1].y - hlines[j].y
+                cells.append(Cell(xpos,ypos,[xsize,ysize]))
         print("Number of cells: " + str(len(cells)))
 
         #Remove boxes from the cell list
         for cell in cells:
             for box in boxes:
-                if(cell.posx == box.posx and cell.posy == box.posy):
+                if(cell.x == box.x and cell.y == box.y):
                     cells.remove(cell)  #Remove the cell that coincides with a box
         print("Number of cells: " + str(len(cells)))
 
@@ -537,14 +537,14 @@ class MyWindow(QtWidgets.QMainWindow):
         midpoints = []
         for item in items:  #Add robot positions to graph
             if isinstance(item, Robot):
-                midpoints.append(Point(item.posx,item.posy))
-                midpoints.append(Point(item.posxend,item.posyend))
+                midpoints.append(Point(item.x,item.y))
+                midpoints.append(Point(item.x_end,item.y_end))
 
         for point in cellmidpoints: #Remove points that touch boxes
             doesnt_touch_box = True
             for box in boxes:
-                if (point.x <= (box.posx+box.sizex) and point.x >= box.posx) and \
-                   (point.y <= (box.posy+box.sizey) and point.y >= box.posy):
+                if (point.x <= (box.x+box.size[0]) and point.x >= box.x) and \
+                   (point.y <= (box.y+box.size[1]) and point.y >= box.y):
                     doesnt_touch_box = False
             if doesnt_touch_box == True:
                 tempmidpoints.append(point)
