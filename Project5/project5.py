@@ -276,8 +276,8 @@ class VerticalLine(UIItem):
         self.y1 = y1
         self.y2 = y2
         
-    def getMidpoint(self):
-        return [self.x, (self.y1-self.y2)/2 + self.y1]
+    # def getMidpoint(self):
+    #     return [self.x, (self.y1-self.y2)/2 + self.y1]
     
     def draw(self, painter):
         painter.setPen(QtGui.QPen(QtCore.Qt.gray, 1, QtCore.Qt.SolidLine))
@@ -290,6 +290,9 @@ class HorizontalLine(UIItem):
         self.y = y
         self.x2 = x2
         
+    # def getMidpoint(self):
+    #     return [self.x1 + (self.x1 - self.x2)/2, self.y]
+    
     def draw(self, painter):
         painter.setPen(QtGui.QPen(QtCore.Qt.gray, 1, QtCore.Qt.SolidLine))
         painter.drawLine(self.X + self.x1, self.Y + self.y, self.X + self.x2, self.Y + self.y)
@@ -411,53 +414,53 @@ class MyWindow(QtWidgets.QMainWindow):
         self.update()
 
     def RobotAdd(self):
-        posx = int(self.lineEditRobotX.text())
-        posy = int(self.lineEditRobotY.text())
-        posxend = int(self.lineEditRobotXend.text())
-        posyend = int(self.lineEditRobotYend.text())
+        x = int(self.lineEditRobotX.text())
+        y = int(self.lineEditRobotY.text())
+        x_end = int(self.lineEditRobotXend.text())
+        y_end = int(self.lineEditRobotYend.text())
 
         global items, items_dict
         addItem = True
 
         #if item already created, don't create new item. Modify existing item
         if items_dict['robot'] != None:
-            items_dict['robot'].x = posx
-            items_dict['robot'].y = posy
-            items_dict['robot'].x_end = posx
-            items_dict['robot'].y_end = posy
+            items_dict['robot'].x = x
+            items_dict['robot'].y = y
+            items_dict['robot'].x_end = x
+            items_dict['robot'].y_end = y
         #otherwise create new item
         else:
-            robot = Robot(posx, posy, posxend, posyend)
+            robot = Robot(x, y, x_end, y_end)
             items_dict['robot'] = robot
 
         self.update()
 
     def BlockAdd_1(self):
-        posx = int(self.lineEditBlockX_1.text())
-        posy = int(self.lineEditBlockY_1.text())
+        x = int(self.lineEditBlockX_1.text())
+        y = int(self.lineEditBlockY_1.text())
         
-        self.AddBlock(posx, posy, 200, 200, "box200")
+        self.AddBlock(x, y, 200, 200, "box200")
 
     def BlockAdd_2(self):
-        posx = int(self.lineEditBlockX_2.text())
-        posy = int(self.lineEditBlockY_2.text())
+        x = int(self.lineEditBlockX_2.text())
+        y = int(self.lineEditBlockY_2.text())
 
-        self.AddBlock(posx, posy, 150, 150, "box150")
+        self.AddBlock(x,y, 150, 150, "box150")
 
     def BlockAdd_3(self):
-        posx = int(self.lineEditBlockX_3.text())
-        posy = int(self.lineEditBlockY_3.text())
+        x = int(self.lineEditBlockX_3.text())
+        y = int(self.lineEditBlockY_3.text())
 
-        self.AddBlock(posx, posy, 100, 100, "box100")
+        self.AddBlock(x, y, 100, 100, "box100")
 
-    def AddBlock(self, posx, posy, sizex, sizey, obj):
+    def AddBlock(self, x, y, sizex, sizey, obj):
         global items, items_dict
 
         if items_dict[obj] != None:
-            items_dict[obj].x = posx
-            items_dict[obj].y = posy
+            items_dict[obj].x = x
+            items_dict[obj].y = y
         else:
-            box = Box(posx, posy, [sizex, sizey])
+            box = Box(x, y, [sizex, sizey])
             items_dict[obj] = box
 
         self.update()
