@@ -1,8 +1,9 @@
-import sys, math, pprint
+import sys, math, pprint, collections   
 from functools import total_ordering
 from PyQt5 import QtGui, uic, QtCore, QtWidgets
 from priodict import priorityDictionary
 
+items_dict = {'robot': None, 'box100': None, 'box150': None, 'box200': None, 'HorizontalLines': [], 'VerticalLines': [] }
 items = []
 originX = 20
 originY = 20
@@ -266,7 +267,7 @@ class Robot(UIItem):
         painter.setBrush(QtCore.Qt.white)
         painter.drawEllipse(self.X + self.x, self.Y + self.y, self.size[0], self.size[1])
         painter.setBrush(QtCore.Qt.black)
-        painter.drawEllipse(self.X + self.x_end, self.y + self.y_end, self.size[0], self.size[1])
+        painter.drawEllipse(self.X + self.x_end, self.Y + self.y_end, self.size[0], self.size[1])
         
 class VerticalLine(UIItem):
     def __init__(self, x, y1, y2):
@@ -345,37 +346,49 @@ class MyWindow(QtWidgets.QMainWindow):
         global originX, originY, items
         qp.drawRect(originX, originY, originX+500, originY+500)
 
-        for item in items:
-            item.draw(qp)                
+        for item in items_dict.values():
+            if item != None:
+                if isinstance(item, collections.Iterable):
+                    for it in item:
+                        it.draw(qp)
+                else:
+                    item.draw(qp)
 
     def addItem(self, event):
-        global items, originX, originY
+        global items_dict, items, originX, originY
         x = event.pos().x() - originX
         y = event.pos().y() - originY
 
         if self.mouseEntryCheckBox.isChecked():
             if self.robotStartRadioButton.isChecked():
-                addItem = True
-                for item in items:
-                    if isinstance(item, Robot):
-                        addItem = False
-                        item.x = x
-                        item.y = y
-                if addItem:
+                if items_dict['robot'] != None:
+                    addItem = False
+                    items_dict['robot'].x = x
+                    items_dict['robot'].y = y
+                else:
                     robot = Robot(x, y, 0, 0)
+                    items_dict['robot'] = robot
                     items.append(robot)
-
+                # for item in items:
+                #     if isinstance(item, Robot):
+                #         addItem = False
+                #         item.posx = posx
+                #         item.posy = posy
                 self.lineEditRobotX.setText(str(x))
                 self.lineEditRobotY.setText(str(y))
             elif self.robotEndRadioButton.isChecked():
-                addItem = True
-                for item in items:
-                    if isinstance(item, Robot):
-                        addItem = False
-                        item.posxend = x
-                        item.posyend = y
-                if addItem:
+                if items_dict['robot'] != None:
+                    addItem = False
+                    items_dict['robot'].x_end = x
+                    items_dict['robot'].y_end = y
+                # for item in items:
+                #     if isinstance(item, Robot):
+                #         addItem = False
+                #         item.posxend = posx
+                #         item.posyend = posy
+                else:
                     robot = Robot(0, 0, x, y)
+                    item_dict['robot'] = robot
                     items.append(robot)
 
                 self.lineEditRobotXend.setText(str(x))
@@ -403,20 +416,19 @@ class MyWindow(QtWidgets.QMainWindow):
         posxend = int(self.lineEditRobotXend.text())
         posyend = int(self.lineEditRobotYend.text())
 
-        global items
+        global items, items_dict
         addItem = True
 
         #if item already created, don't create new item. Modify existing item
-        for item in items:
-            if isinstance(item, Robot):
-                addItem = False
-                item.posx = posx
-                item.posy = posy
-
+        if items_dict['robot'] != None:
+            items_dict['robot'].x = posx
+            items_dict['robot'].y = posy
+            items_dict['robot'].x_end = posx
+            items_dict['robot'].y_end = posy
         #otherwise create new item
-        if addItem == True:
+        else:
             robot = Robot(posx, posy, posxend, posyend)
-            items.append(robot)
+            items_dict['robot'] = robot
 
         self.update()
 
@@ -439,18 +451,14 @@ class MyWindow(QtWidgets.QMainWindow):
         self.AddBlock(posx, posy, 100, 100, "box100")
 
     def AddBlock(self, posx, posy, sizex, sizey, obj):
-        global items
-        addItem = True
+        global items, items_dict
 
-        for item in items:
-            if isinstance(item, Box):
-                addItem = False
-                item.posx = posx
-                item.posy = posy
-
-        if addItem == True:
+        if items_dict[obj] != None:
+            items_dict[obj].x = posx
+            items_dict[obj].y = posy
+        else:
             box = Box(posx, posy, [sizex, sizey])
-            items.append(box)
+            items_dict[obj] = box
 
         self.update()
 
@@ -476,30 +484,43 @@ class MyWindow(QtWidgets.QMainWindow):
 
     def Calculate(self):
         #Draw Vertical and Horizonal Lines
-        global items
-        boxes = []
-        for item in items:
-            if isinstance(item, Box):
-                boxes.append(item)
+        global items, items_dict
+        boxes = [items_dict['box100'], items_dict['box150'], items_dict['box200']]
+        #Remove any None objects
+        boxes = [box for box in boxes if box != None]
+        
+        # for item in items:
+        #     if isinstance(item, Box):
+        #         boxes.append(item)
 
-        items.append(VerticalLine(0,0,maxY))
-        items.append(HorizontalLine(0,maxX,0))
-        items.append(VerticalLine(maxX,0,maxY))
-        items.append(HorizontalLine(0,maxX,maxY))
+        items_dict['VerticalLines'].append(VerticalLine(0,0,maxY))
+        items_dict['VerticalLines'].append(VerticalLine(maxX,0,maxY))
+        items_dict['HorizontalLines'].append(HorizontalLine(0,maxX,0))
+        items_dict['HorizontalLines'].append(HorizontalLine(0,maxX,maxY))
+        # items.append(VerticalLine(0,0,maxY))
+        # items.append(HorizonalLine(0,maxX,0))
+        # items.append(VerticalLine(maxX,0,maxY))
+        # items.append(HorizonalLine(0,maxX,maxY))
+        # for box in boxes:
+        #     items.append(VerticalLine(box.x, 0, maxY))
+        #     items.append(VerticalLine(box.x+box.size[0], 0, maxY))
+        #     items.append(HorizonalLine(0, maxX, box.y))
+        #     items.append(HorizonalLine(0, maxX, box.y+box.size[1]))
         for box in boxes:
-            items.append(VerticalLine(box.x, 0, maxY))
-            items.append(VerticalLine(box.x+box.size[0], 0, maxY))
-            items.append(HorizontalLine(0, maxX, box.y))
-            items.append(HorizontalLine(0, maxX, box.y+box.size[1]))
+            items_dict['VerticalLines'].append(VerticalLine(box.x, 0, maxY))
+            items_dict['VerticalLines'].append(VerticalLine(box.x+box.size[0], 0, maxY))
+            items_dict['HorizontalLines'].append(HorizontalLine(0, maxX, box.y))
+            items_dict['HorizontalLines'].append(HorizontalLine(0, maxX, box.y+box.size[1]))
 
         #Sort Lines
-        hlines = []
-        vlines = []
-        for item in items:
-            if isinstance(item, HorizontalLine):
-                hlines.append(item)
-            if isinstance(item, VerticalLine):
-                vlines.append(item)
+        hlines = items_dict['HorizontalLines']
+        vlines = items_dict['VerticalLines']
+
+        # for item in items:
+        #     if isinstance(item, HorizontalLine):
+        #         hlines.append(item)
+        #     if isinstance(item, VerticalLine):
+        #         vlines.append(item)
         vlines = sorted(vlines, key = x_key)
         hlines = sorted(hlines, key = y_key)
 
@@ -539,10 +560,13 @@ class MyWindow(QtWidgets.QMainWindow):
 
         tempmidpoints = []
         midpoints = []
-        for item in items:  #Add robot positions to graph
-            if isinstance(item, Robot):
-                midpoints.append(Point(item.x,item.y))
-                midpoints.append(Point(item.x_end,item.y_end))
+        # for item in items:  #Add robot positions to graph
+        #     if isinstance(item, Robot):
+        #         midpoints.append(Point(item.x,item.y))
+        #         midpoints.append(Point(item.x_end,item.y_end))
+        robot = items_dict['robot']
+        midpoints.append(Point(robot.x, robot.y,))
+        midpoints.append(Point(robot.x_end, robot.y_end))
 
         for point in cellmidpoints: #Remove points that touch boxes
             doesnt_touch_box = True
