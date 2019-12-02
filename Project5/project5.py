@@ -12,9 +12,53 @@ originY = 20
 maxX = 520
 maxY = 520
 
+class PriorityQueue():
+    def __init__(self, end_state):
+        self.queue = []
+        self.end_state = end_state
+    
+    def __distance(self, cell):
+        return math.sqrt((end_state.y-cell.y)**2 + (end_state.x-cell.x)**2)
+    
+    def push(self, cell):
+        if cell[1] is True:
+            distance = self.__distance(cell[0])
+            self.queue.append([distance, cell])
+            self.queue.sort(key = lambda x: x[0])
+            
+    def pop(self):
+        try:
+            cell = self.queue[0]
+            del self.queue[0]
+            return cell
+        except:
+            return None
+        
+def get_possible_cells(cell, matrix):
+    index_of_cell = [(i, m.index(c) for i, c enumerate(matrix) if cell in c)]
+    return [(index_of_cell[0]+1, index_of_cell[1]), (index_of_cell[0]-1, index_of_cell[1]),
+            (index_of_cell[0], index_of_cell[1]+1), (index_of_cell[0], index_of_cell[1]-1)]
+        
+def CalculatePath(start, end, matrix):
+    if False in [start[1], end[1]]:
+        print('No path can be found')
+        return
+    
+    current_cell = start[0]
+    q = PriorityQueue(end)
+    
+    while current_cell not end[0]:
+        indexes = get_possible_cells(current_cell, matrix)
+        
+        for idx in indexes:
+            try:
+                q.push(matrix[idx[0]][idx[1]])
+            except:
+                pass
+            
+        current_cell = q.pop()
+
 def distance(point1, point2):
-    print(point1)
-    print(point2)
     return math.sqrt((point2.y-point1.y)**2 + (point2.x-point1.x)**2)
 
 def uniquify(li):
@@ -112,103 +156,6 @@ def shortestPath(G,start,end):
         end = P[end]
     Path.reverse()
     return Path
-
-#@total_ordering
-#class Point:
-    #def __init__(self,x1,y1):
-        #self.x = x1
-        #self.y = y1
-    #def __repr__(self):
-        #return "[" + str(self.x) + "," + str(self.y) + "]"
-    #def __eq__(self,other):
-        #return (self.x,self.y)==(other.x,other.y)
-    #def __lt__(self,other):
-        #return (self.x,self.y) < (other.x,other.y)
-
-#class Block:
-    #def __init__(self,posx,posy,sizex,sizey):
-        #self.sizex = sizex
-        #self.sizey = sizey
-        #self.posx = posx
-        #self.posy = posy
-        #self.name = "box" + str(sizex)
-        #print('initializing box')
-    #def top(self):
-        #return Point(self.posx + self.sizex/2, self.posy)
-    #def bottom(self):
-        #return Point(self.posx + self.sizex/2, self.posy + self.sizey)
-    #def left(self):
-        #return Point(self.posx, self.posy + self.sizey/2)
-    #def right(self):
-        #return Point(self.posx + self.sizex, self.posy + self.sizey/2)
-
-#class Robot:
-    #def __init__(self,posx,posy,posxend,posyend):
-        #self.posx = posx
-        #self.posy = posy
-        #self.posxend = posxend
-        #self.posyend = posyend
-        #self.sizex = 10
-        #self.sizey = 10
-        #self.name = "robot"
-        #print('initializing robot')
-        #def getPosition(self):
-            #return [posx,posy]
-
-#class VerticalLine:
-    #def __init__(self,posx,posy1,posy2):
-        #self.posx = posx
-        #self.posy1 = posy1
-        #self.posy2 = posy2
-        #self.name = "verticalline"
-    #def getMidpoint(self):
-        #return [posx, (posy1-posy2)/2 + posy1]  #Double check this
-    #def __repr__(self):
-        #return "vline_" + str(self.posx)
-
-#class HorizonalLine:
-    #def __init__(self,posx1,posx2,posy):
-        #self.posx1 = posx1
-        #self.posx2 = posx2
-        #self.posy = posy
-        #self.name = "horizonalline"
-    #def __repr__(self):
-        #return "hline_" + str(self.posy)
-
-# class PathLine:
-#     def __init__(self,x1,y1, x2, y2):
-#         self.x1 = x1
-#         self.x2 = x2
-#         self.y1 = y1
-#         self.y2 = y2
-#         # self.name = "path"
-
-#     def draw(self, painter):
-#         painter.setBrush(QtCore.Qt.black)
-#         painter.drawLine(self.x1, self.y1, self.x2, self.y2)
-
-#class Cell:
-    #def __init__(self,posx,posy,sizex,sizey):
-        #self.sizex = sizex
-        #self.sizey = sizey
-        #self.posx = posx
-        #self.posy = posy
-        #self.name = "cell"
-    #def __repr__(self):
-        #return "cell_[" + str(self.posx)+ "," + str(self.posy) + "]"
-    #def top(self):
-        #return Point(self.posx + self.sizex/2, self.posy)
-    #def bottom(self):
-        #return Point(self.posx + self.sizex/2, self.posy + self.sizey)
-    #def left(self):
-        #return Point(self.posx, self.posy + self.sizey/2)
-    #def right(self):
-        #return Point(self.posx + self.sizex, self.posy + self.sizey/2)
-    #def isAdjacent(self,point):
-        #if point == self.top() or point == self.bottom() or point == self.left() or point == self.right():
-            #return True
-        #else:
-            #return False
             
 class UIItem:
     def __init__(self):
@@ -577,19 +524,14 @@ class MyWindow(QtWidgets.QMainWindow):
                 idx += 1
                 board_matrix.append([cell])
         
-        midpoints = []
-        # for item in items:  #Add robot positions to graph
-        #     if isinstance(item, Robot):
-        #         midpoints.append(Point(item.x,item.y))
-        #         midpoints.append(Point(item.x_end,item.y_end))
         robot = items_dict['robot']
         start_point = sorted([(distance(Point(robot.x, robot.y), cell[0]), cell) for cell in all_cells], key = lambda x: x[0])[0]
         end_point = sorted([(distance(Point(robot.x_end, robot.y_end), cell[0]), cell) for cell in all_cells], key = lambda x: x[0])[0]
         print(f'Start cell: {start_point[1][0].x}, {start_point[1][0].y}')
         print(f'End cell: {end_point[1][0].x}, {end_point[1][0].y}')
         
-        midpoints.append(Point(robot.x, robot.y))
-        midpoints.append(Point(robot.x_end, robot.y_end))
+        start_point_cell = start_point[1]
+        end_point_cell = end_point[1]
 
         for point in cellmidpoints: #Remove points that touch boxes
             doesnt_touch_box = True
