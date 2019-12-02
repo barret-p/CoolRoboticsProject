@@ -13,12 +13,6 @@ maxY = 520
 def distance(x1,y1,x2,y2):
     return math.sqrt((y2-y1)**2 + (x2-x1)**2)
 
-def y_key(hline):
-    return hline.y
-
-def x_key(vline):
-    return vline.x
-
 def uniquify(li):
     checked = []
     for e in li:
@@ -524,8 +518,16 @@ class MyWindow(QtWidgets.QMainWindow):
         #         hlines.append(item)
         #     if isinstance(item, VerticalLine):
         #         vlines.append(item)
-        vlines = sorted(vlines, key = x_key)
-        hlines = sorted(hlines, key = y_key)
+        
+        # sort functions
+        def sort_by_x(vline):
+            return vline.x
+
+        def sort_by_y(hline):
+            return hline.y
+
+        vlines = sorted(vlines, key = sort_by_x)
+        hlines = sorted(hlines, key = sort_by_y)
 
         #Create Cell Representations
         cells = []
