@@ -60,7 +60,7 @@
      <property name="title">
       <string>Robot</string>
      </property>
-     <widget class="QPushButton" name="pushButtonRobotAdd">
+     <widget class="QPushButton" name="addRobotButton">
       <property name="geometry">
        <rect>
         <x>130</x>
@@ -192,7 +192,7 @@
      <property name="title">
       <string>Box 1 Coordinates (200x200)</string>
      </property>
-     <widget class="QLineEdit" name="lineEditBlockX_1">
+     <widget class="QLineEdit" name="lineEditBoxX_1">
       <property name="geometry">
        <rect>
         <x>10</x>
@@ -202,7 +202,7 @@
        </rect>
       </property>
      </widget>
-     <widget class="QLineEdit" name="lineEditBlockY_1">
+     <widget class="QLineEdit" name="lineEditBoxY_1">
       <property name="geometry">
        <rect>
         <x>60</x>
@@ -212,7 +212,7 @@
        </rect>
       </property>
      </widget>
-     <widget class="QPushButton" name="pushButtonBlockAdd_1">
+     <widget class="QPushButton" name="addBox1Button">
       <property name="geometry">
        <rect>
         <x>110</x>
@@ -233,7 +233,7 @@
       </property>
      </widget>
     </widget>
-    <widget class="QPushButton" name="pushButtonRemoveAll">
+    <widget class="QPushButton" name="removeAllButton">
      <property name="enabled">
       <bool>true</bool>
      </property>
@@ -275,7 +275,7 @@
      <property name="title">
       <string>Box 2 Coordinates (150x150)</string>
      </property>
-     <widget class="QPushButton" name="pushButtonBlockAdd_2">
+     <widget class="QPushButton" name="addBox2Button">
       <property name="geometry">
        <rect>
         <x>110</x>
@@ -295,7 +295,7 @@
        <string>Add</string>
       </property>
      </widget>
-     <widget class="QLineEdit" name="lineEditBlockX_2">
+     <widget class="QLineEdit" name="lineEditBoxX_2">
       <property name="geometry">
        <rect>
         <x>10</x>
@@ -305,7 +305,7 @@
        </rect>
       </property>
      </widget>
-     <widget class="QLineEdit" name="lineEditBlockY_2">
+     <widget class="QLineEdit" name="lineEditBoxY_2">
       <property name="geometry">
        <rect>
         <x>60</x>
@@ -335,7 +335,7 @@
      <property name="title">
       <string>Box 3 Coordinates (100x100)</string>
      </property>
-     <widget class="QPushButton" name="pushButtonBlockAdd_3">
+     <widget class="QPushButton" name="addBox3Button">
       <property name="geometry">
        <rect>
         <x>110</x>
@@ -361,7 +361,7 @@
        <string>Add</string>
       </property>
      </widget>
-     <widget class="QLineEdit" name="lineEditBlockX_3">
+     <widget class="QLineEdit" name="lineEditBoxX_3">
       <property name="geometry">
        <rect>
         <x>10</x>
@@ -371,7 +371,7 @@
        </rect>
       </property>
      </widget>
-     <widget class="QLineEdit" name="lineEditBlockY_3">
+     <widget class="QLineEdit" name="lineEditBoxY_3">
       <property name="geometry">
        <rect>
         <x>60</x>
@@ -424,7 +424,7 @@
       </rect>
      </property>
      <property name="text">
-      <string>Block 1 Location</string>
+      <string>Box 1 Location</string>
      </property>
      <attribute name="buttonGroup">
       <string notr="true">buttonGroup</string>
@@ -440,7 +440,7 @@
       </rect>
      </property>
      <property name="text">
-      <string>Block 2 Location</string>
+      <string>Box 2 Location</string>
      </property>
      <attribute name="buttonGroup">
       <string notr="true">buttonGroup</string>
@@ -456,7 +456,7 @@
       </rect>
      </property>
      <property name="text">
-      <string>Block 3 Location</string>
+      <string>Box 3 Location</string>
      </property>
      <attribute name="buttonGroup">
       <string notr="true">buttonGroup</string>
@@ -500,7 +500,7 @@
       <string/>
      </property>
     </widget>
-    <widget class="QPushButton" name="pushButtonRemovePath">
+    <widget class="QPushButton" name="removePathButton">
      <property name="geometry">
       <rect>
        <x>130</x>
@@ -521,7 +521,7 @@
       <string>Remove Path</string>
      </property>
     </widget>
-    <widget class="QPushButton" name="pushButtonCalculate">
+    <widget class="QPushButton" name="calculateButton">
      <property name="geometry">
       <rect>
        <x>30</x>

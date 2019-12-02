@@ -322,13 +322,13 @@ class MyWindow(QtWidgets.QMainWindow):
         
     def initUI(self):
         #Go to functions when buttons are pressed
-        self.pushButtonRobotAdd.clicked.connect(self.RobotAdd)
-        self.pushButtonBlockAdd_1.clicked.connect(self.BlockAdd_1)
-        self.pushButtonBlockAdd_2.clicked.connect(self.BlockAdd_2)
-        self.pushButtonBlockAdd_3.clicked.connect(self.BlockAdd_3)
-        self.pushButtonRemoveAll.clicked.connect(self.RemoveAll)
-        self.pushButtonCalculate.clicked.connect(self.Calculate)
-        self.pushButtonRemovePath.clicked.connect(self.RemovePath)
+        self.addRobotButton.clicked.connect(self.addRobot)
+        self.addBox1Button.clicked.connect(self.addBox1)
+        self.addBox2Button.clicked.connect(self.addBox2)
+        self.addBox3Button.clicked.connect(self.addBox3)
+        self.calculateButton.clicked.connect(self.calculate)
+        self.removePathButton.clicked.connect(self.removePath)
+        self.removeAllButton.clicked.connect(self.removeAll)
         self.pathNotFoundLabel.hide()
 
         self.centralWidget.mouseReleaseEvent = self.addItem
@@ -395,23 +395,23 @@ class MyWindow(QtWidgets.QMainWindow):
                 self.lineEditRobotXend.setText(str(x))
                 self.lineEditRobotYend.setText(str(y))
             elif self.block1RadioButton.isChecked():
-                self.AddBlock(x, y, 200, 200, "box200")
-                self.lineEditBlockX_1.setText(str(x))
-                self.lineEditBlockY_1.setText(str(y))
+                self.addBox(x, y, 200, 200, "box200")
+                self.lineEditBoxX_1.setText(str(x))
+                self.lineEditBoxY_1.setText(str(y))
             elif self.block2RadioButton.isChecked():
-                self.AddBlock(x, y, 150, 150, "box150")
-                self.lineEditBlockX_2.setText(str(x))
-                self.lineEditBlockY_2.setText(str(y))
+                self.addBox(x, y, 150, 150, "box150")
+                self.lineEditBoxX_2.setText(str(x))
+                self.lineEditBoxY_2.setText(str(y))
             elif self.block3RadioButton.isChecked():
-                self.AddBlock(x, y, 100, 100, "box100")
-                self.lineEditBlockX_3.setText(str(x))
-                self.lineEditBlockY_3.setText(str(y))
+                self.addBox(x, y, 100, 100, "box100")
+                self.lineEditBoxX_3.setText(str(x))
+                self.lineEditBoxY_3.setText(str(y))
             else:
                 pass
 
         self.update()
 
-    def RobotAdd(self):
+    def addRobot(self):
         x = int(self.lineEditRobotX.text())
         y = int(self.lineEditRobotY.text())
         x_end = int(self.lineEditRobotXend.text())
@@ -433,25 +433,8 @@ class MyWindow(QtWidgets.QMainWindow):
 
         self.update()
 
-    def BlockAdd_1(self):
-        x = int(self.lineEditBlockX_1.text())
-        y = int(self.lineEditBlockY_1.text())
-        
-        self.AddBlock(x, y, 200, 200, "box200")
-
-    def BlockAdd_2(self):
-        x = int(self.lineEditBlockX_2.text())
-        y = int(self.lineEditBlockY_2.text())
-
-        self.AddBlock(x,y, 150, 150, "box150")
-
-    def BlockAdd_3(self):
-        x = int(self.lineEditBlockX_3.text())
-        y = int(self.lineEditBlockY_3.text())
-
-        self.AddBlock(x, y, 100, 100, "box100")
-
-    def AddBlock(self, x, y, sizex, sizey, obj):
+    # generic add box function for the functions below
+    def addBox(self, x, y, sizex, sizey, obj):
         global items, items_dict
 
         if items_dict[obj] != None:
@@ -463,30 +446,31 @@ class MyWindow(QtWidgets.QMainWindow):
 
         self.update()
 
+    def addBox1(self):
+        x = int(self.lineEditBoxX_1.text())
+        y = int(self.lineEditBoxY_1.text())
+        
+        self.addBox(x, y, 200, 200, "box200")
+
+    def addBox2(self):
+        x = int(self.lineEditBoxX_2.text())
+        y = int(self.lineEditBoxY_2.text())
+
+        self.addBox(x,y, 150, 150, "box150")
+
+    def addBox3(self):
+        x = int(self.lineEditBoxX_3.text())
+        y = int(self.lineEditBoxY_3.text())
+
+        self.addBox(x, y, 100, 100, "box100")
+
     def displayPathNotFound(self):
         self.pathNotFoundLabel.show()
 
     def removePathNotFound(self):
         self.pathNotFoundLabel.hide()
 
-    def RemovePath(self):
-        global items, items_dict
-        items = [item for item in items if isinstance(item, Robot) or isinstance(item, Box)]
-        items_dict['HorizontalLines'] = []
-        items_dict['VerticalLines'] = []
-        items_dict['Path'] = []
-        self.removePathNotFound()
-        self.update()
-
-    def RemoveAll(self):
-        global items, items_dict
-        items_dict = {'robot': None, 'box100': None, 'box150': None, 'box200': None,
-              'HorizontalLines': [], 'VerticalLines': [], 'Path': [] }
-        print('Items removed')
-        self.removePathNotFound()
-        self.update()
-
-    def Calculate(self):
+    def calculate(self):
         #Draw Vertical and Horizonal Lines
         global items, items_dict
         boxes = [items_dict['box100'], items_dict['box150'], items_dict['box200']]
@@ -618,6 +602,23 @@ class MyWindow(QtWidgets.QMainWindow):
 
         print(path)
         print('plotted')
+        self.update()
+
+    def removePath(self):
+        global items, items_dict
+        items = [item for item in items if isinstance(item, Robot) or isinstance(item, Box)]
+        items_dict['HorizontalLines'] = []
+        items_dict['VerticalLines'] = []
+        items_dict['Path'] = []
+        self.removePathNotFound()
+        self.update()
+
+    def removeAll(self):
+        global items, items_dict
+        items_dict = {'robot': None, 'box100': None, 'box150': None, 'box200': None,
+              'HorizontalLines': [], 'VerticalLines': [], 'Path': [] }
+        print('Items removed')
+        self.removePathNotFound()
         self.update()
 
 def main():
