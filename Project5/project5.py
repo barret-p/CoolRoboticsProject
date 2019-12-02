@@ -12,8 +12,10 @@ originY = 20
 maxX = 520
 maxY = 520
 
-def distance(x1,y1,x2,y2):
-    return math.sqrt((y2-y1)**2 + (x2-x1)**2)
+def distance(point1, point2):
+    print(point1)
+    print(point2)
+    return math.sqrt((point2.y-point1.y)**2 + (point2.x-point1.x)**2)
 
 def uniquify(li):
     checked = []
@@ -575,14 +577,17 @@ class MyWindow(QtWidgets.QMainWindow):
                 idx += 1
                 board_matrix.append([cell])
         
-        print(board_matrix)
-        
         midpoints = []
         # for item in items:  #Add robot positions to graph
         #     if isinstance(item, Robot):
         #         midpoints.append(Point(item.x,item.y))
         #         midpoints.append(Point(item.x_end,item.y_end))
         robot = items_dict['robot']
+        start_point = sorted([(distance(Point(robot.x, robot.y), cell[0]), cell) for cell in all_cells], key = lambda x: x[0])[0]
+        end_point = sorted([(distance(Point(robot.x_end, robot.y_end), cell[0]), cell) for cell in all_cells], key = lambda x: x[0])[0]
+        print(f'Start cell: {start_point[1][0].x}, {start_point[1][0].y}')
+        print(f'End cell: {end_point[1][0].x}, {end_point[1][0].y}')
+        
         midpoints.append(Point(robot.x, robot.y))
         midpoints.append(Point(robot.x_end, robot.y_end))
 
