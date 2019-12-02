@@ -35,7 +35,7 @@
      </font>
     </property>
     <property name="title">
-     <string>Environment Setup</string>
+     <string>Control Panel</string>
     </property>
     <property name="alignment">
      <set>Qt::AlignCenter</set>
@@ -190,7 +190,7 @@
       </font>
      </property>
      <property name="title">
-      <string>Block 1 (200x200)</string>
+      <string>Box 1 Coordinates (200x200)</string>
      </property>
      <widget class="QLineEdit" name="lineEditBlockX_1">
       <property name="geometry">
@@ -236,7 +236,7 @@
     <widget class="QPushButton" name="pushButtonRemoveAll">
      <property name="geometry">
       <rect>
-       <x>140</x>
+       <x>230</x>
        <y>320</y>
        <width>91</width>
        <height>23</height>
@@ -270,7 +270,7 @@
       </font>
      </property>
      <property name="title">
-      <string>Block 2 (150x150)</string>
+      <string>Box 2 Coordinates (150x150)</string>
      </property>
      <widget class="QPushButton" name="pushButtonBlockAdd_2">
       <property name="geometry">
@@ -330,7 +330,7 @@
       </font>
      </property>
      <property name="title">
-      <string>Block 3 (100x100)</string>
+      <string>Box 3 Coordinates (100x100)</string>
      </property>
      <widget class="QPushButton" name="pushButtonBlockAdd_3">
       <property name="geometry">
@@ -497,32 +497,33 @@
       <string/>
      </property>
     </widget>
-   </widget>
-   <widget class="QGroupBox" name="groupBoxControls">
-    <property name="geometry">
-     <rect>
-      <x>550</x>
-      <y>380</y>
-      <width>211</width>
-      <height>61</height>
-     </rect>
-    </property>
-    <property name="font">
-     <font>
-      <pointsize>16</pointsize>
-      <weight>50</weight>
-      <bold>false</bold>
-     </font>
-    </property>
-    <property name="title">
-     <string>Controls</string>
-    </property>
+    <widget class="QPushButton" name="pushButtonRemovePath">
+     <property name="geometry">
+      <rect>
+       <x>130</x>
+       <y>320</y>
+       <width>91</width>
+       <height>23</height>
+      </rect>
+     </property>
+     <property name="font">
+      <font>
+       <family>MS Shell Dlg 2</family>
+       <pointsize>10</pointsize>
+       <weight>75</weight>
+       <bold>true</bold>
+      </font>
+     </property>
+     <property name="text">
+      <string>Remove Path</string>
+     </property>
+    </widget>
     <widget class="QPushButton" name="pushButtonCalculate">
      <property name="geometry">
       <rect>
-       <x>20</x>
-       <y>30</y>
-       <width>75</width>
+       <x>30</x>
+       <y>320</y>
+       <width>91</width>
        <height>23</height>
       </rect>
      </property>
@@ -538,27 +539,27 @@
       <string>Calculate</string>
      </property>
     </widget>
-    <widget class="QPushButton" name="pushButtonReset">
-     <property name="geometry">
-      <rect>
-       <x>120</x>
-       <y>30</y>
-       <width>75</width>
-       <height>23</height>
-      </rect>
-     </property>
-     <property name="font">
-      <font>
-       <family>MS Shell Dlg 2</family>
-       <pointsize>10</pointsize>
-       <weight>75</weight>
-       <bold>true</bold>
-      </font>
-     </property>
-     <property name="text">
-      <string>Reset</string>
-     </property>
-    </widget>
+   </widget>
+   <widget class="QLabel" name="noPathLabel">
+    <property name="enabled">
+     <bool>false</bool>
+    </property>
+    <property name="geometry">
+     <rect>
+      <x>640</x>
+      <y>410</y>
+      <width>161</width>
+      <height>21</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <pointsize>16</pointsize>
+     </font>
+    </property>
+    <property name="text">
+     <string>404: Path Not Found</string>
+    </property>
    </widget>
   </widget>
   <widget class="QMenuBar" name="menubar">

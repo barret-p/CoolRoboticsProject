@@ -107,6 +107,9 @@ def shortestPath(G,start,end):
     while 1:
         Path.append(end)
         if end == start: break
+        if end not in P.keys():
+            print("Cannot find a connecting path")
+            break
         end = P[end]
     Path.reverse()
     return Path
@@ -140,7 +143,6 @@ class Block:
     def right(self):
         return Point(self.posx + self.sizex, self.posy + self.sizey/2)
 
-
 class Robot:
     def __init__(self,posx,posy,posxend,posyend):
         self.posx = posx
@@ -153,7 +155,6 @@ class Robot:
         print('initializing robot')
         def getPosition(self):
             return [posx,posy]
-            
 
 class VerticalLine:
     def __init__(self,posx,posy1,posy2):
@@ -174,6 +175,7 @@ class HorizonalLine:
         self.name = "horizonalline"
     def __repr__(self):
         return "hline_" + str(self.posy)
+
 class PathLine:
     def __init__(self,posx1,posy1, posx2, posy2):
         self.posx1 = posx1
@@ -219,6 +221,7 @@ class MyWindow(QtWidgets.QMainWindow):
         self.pushButtonBlockAdd_3.clicked.connect(self.BlockAdd_3)
         self.pushButtonRemoveAll.clicked.connect(self.RemoveAll)
         self.pushButtonCalculate.clicked.connect(self.Calculate)
+        self.pushButtonRemovePath.clicked.connect(self.RemovePath)
 
         self.centralWidget.mouseReleaseEvent = self.addItem
         self.setWindowTitle('Project 5: Robot Motion Planning')    
@@ -361,6 +364,13 @@ class MyWindow(QtWidgets.QMainWindow):
 
         self.update()
 
+    def displayPathNotFound(self):
+        pass
+
+    def RemovePath(self):
+        global items
+        items = [item for item in items if (item.name == "robot" or item.name[:3] == "box")]
+
     def RemoveAll(self):
         global items
         items = []
@@ -427,7 +437,7 @@ class MyWindow(QtWidgets.QMainWindow):
             cellmidpoints.append(cell.bottom())
             cellmidpoints.append(cell.left())
             cellmidpoints.append(cell.right())
-            
+
         cellmidpoints = sorted(uniquify(cellmidpoints))
 
         tempmidpoints = []
@@ -436,7 +446,7 @@ class MyWindow(QtWidgets.QMainWindow):
             if item.name=="robot":
                 midpoints.append(Point(item.posx,item.posy))
                 midpoints.append(Point(item.posxend,item.posyend))
-                
+
         for point in cellmidpoints: #Remove points that touch boxes
             doesnt_touch_box = True
             for box in boxes:
@@ -445,11 +455,11 @@ class MyWindow(QtWidgets.QMainWindow):
                     doesnt_touch_box = False
             if doesnt_touch_box == True:
                 tempmidpoints.append(point)
-                    
+
         for point in tempmidpoints: #Remove points that touch the boundary
             if not (point.x == 0 or point.y == 0 or point.x == maxX or point.y == maxY):
                 midpoints.append(point)
-                
+
         print("Final Midpoints")
         print(midpoints)
         print(len(midpoints))
@@ -466,7 +476,6 @@ class MyWindow(QtWidgets.QMainWindow):
             items.append(p)
 
         print(path)
-        
         print('plotted')
         self.update()
 
