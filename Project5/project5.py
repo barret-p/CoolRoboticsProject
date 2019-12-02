@@ -241,6 +241,9 @@ class Box(UIItem):
     
     def getRight(self):
         return Point(self.x + self.size[0], self.y + self.size[1]/2)
+
+    def getCenter(self):
+        return Point(self.getTop().x, self.getRight().y)
     
     def draw(self, painter):
         painter.setBrush(QtCore.Qt.darkGray)
@@ -559,11 +562,13 @@ class MyWindow(QtWidgets.QMainWindow):
             boxmidpoints.append(box.getBottom())
             boxmidpoints.append(box.getLeft())
             boxmidpoints.append(box.getRight())
+        # for cell in cells:
+        #     cellmidpoints.append(cell.getTop())
+        #     cellmidpoints.append(cell.getBottom())
+        #     cellmidpoints.append(cell.getLeft())
+        #     cellmidpoints.append(cell.getRight())
         for cell in cells:
-            cellmidpoints.append(cell.getTop())
-            cellmidpoints.append(cell.getBottom())
-            cellmidpoints.append(cell.getLeft())
-            cellmidpoints.append(cell.getRight())
+            cellmidpoints.append(cell.getCenter())
 
         cellmidpoints = sorted(uniquify(cellmidpoints))
 
