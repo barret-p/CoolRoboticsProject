@@ -234,10 +234,13 @@
      </widget>
     </widget>
     <widget class="QPushButton" name="pushButtonRemoveAll">
+     <property name="enabled">
+      <bool>true</bool>
+     </property>
      <property name="geometry">
       <rect>
        <x>230</x>
-       <y>320</y>
+       <y>310</y>
        <width>91</width>
        <height>23</height>
       </rect>
@@ -501,7 +504,7 @@
      <property name="geometry">
       <rect>
        <x>130</x>
-       <y>320</y>
+       <y>310</y>
        <width>91</width>
        <height>23</height>
       </rect>
@@ -522,7 +525,7 @@
      <property name="geometry">
       <rect>
        <x>30</x>
-       <y>320</y>
+       <y>310</y>
        <width>91</width>
        <height>23</height>
       </rect>
@@ -540,9 +543,9 @@
      </property>
     </widget>
    </widget>
-   <widget class="QLabel" name="noPathLabel">
+   <widget class="QLabel" name="pathNotFoundLabel">
     <property name="enabled">
-     <bool>false</bool>
+     <bool>true</bool>
     </property>
     <property name="geometry">
      <rect>

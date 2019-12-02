@@ -109,6 +109,7 @@ def shortestPath(G,start,end):
         if end == start: break
         if end not in P.keys():
             print("Cannot find a connecting path")
+            return -1
             break
         end = P[end]
     Path.reverse()
@@ -222,6 +223,7 @@ class MyWindow(QtWidgets.QMainWindow):
         self.pushButtonRemoveAll.clicked.connect(self.RemoveAll)
         self.pushButtonCalculate.clicked.connect(self.Calculate)
         self.pushButtonRemovePath.clicked.connect(self.RemovePath)
+        self.pathNotFoundLabel.hide()
 
         self.centralWidget.mouseReleaseEvent = self.addItem
         self.setWindowTitle('Project 5: Robot Motion Planning')    
@@ -365,16 +367,22 @@ class MyWindow(QtWidgets.QMainWindow):
         self.update()
 
     def displayPathNotFound(self):
-        pass
+        self.pathNotFoundLabel.show()
+
+    def removePathNotFound(self):
+        self.pathNotFoundLabel.hide()
 
     def RemovePath(self):
         global items
         items = [item for item in items if (item.name == "robot" or item.name[:3] == "box")]
+        self.removePathNotFound()
+        self.update()
 
     def RemoveAll(self):
         global items
         items = []
         print('Items removed')
+        self.removePathNotFound()
         self.update()
 
     def Calculate(self):
@@ -469,6 +477,12 @@ class MyWindow(QtWidgets.QMainWindow):
 
         #Use Dijkstras to find the shortest path
         path = shortestPath(graph,0,1)
+
+        #Check if path connects start and end point
+        if path == -1:
+            self.displayPathNotFound()
+            self.update()
+            return
 
         print("Midpoints to solution:")
         for index in range(len(path) - 1):
