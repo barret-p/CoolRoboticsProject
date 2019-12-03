@@ -65,7 +65,7 @@ def generateGraph(midpoints,cells):
 
     
     
-    pprint.pprint(graph)
+    # pprint.pprint(graph)
     return graph
 
 
@@ -101,7 +101,7 @@ def shortestPath(G,start,end):
     D,P = Dijkstra(G,start,end)
     P[0] = list(G[0])[0]
     P[1] = list(G[1])[0]
-    print(P)
+    # print(P)
     Path = []
     while 1:
         Path.append(end)
@@ -187,7 +187,7 @@ class VerticalLine(UIItem):
     
     def draw(self, painter):
         painter.setPen(QtGui.QPen(QtCore.Qt.gray, 1, QtCore.Qt.SolidLine))
-        painter.drawLine(self.X + self.x, self.Y + self.y1, self.X + self.x, self.Y + self.y2)
+        # painter.drawLine(self.X + self.x, self.Y + self.y1, self.X + self.x, self.Y + self.y2)
         
 class HorizontalLine(UIItem):
     def __init__(self, x1, x2, y):
@@ -198,7 +198,7 @@ class HorizontalLine(UIItem):
     
     def draw(self, painter):
         painter.setPen(QtGui.QPen(QtCore.Qt.gray, 1, QtCore.Qt.SolidLine))
-        painter.drawLine(self.X + self.x1, self.Y + self.y, self.X + self.x2, self.Y + self.y)
+        # painter.drawLine(self.X + self.x1, self.Y + self.y, self.X + self.x2, self.Y + self.y)
         
 class Path(UIItem):
     def __init__(self, x1, y1, x2, y2):
@@ -423,7 +423,7 @@ class MyWindow(QtWidgets.QMainWindow):
                 xsize = vlines[i+1].x - vlines[i].x
                 ysize = hlines[j+1].y - hlines[j].y
                 cells.append(Cell(xpos,ypos,[xsize,ysize]))
-        print("Number of cells: " + str(len(cells)))
+        # print("Number of cells: " + str(len(cells)))
 
         #Remove boxes from the cell list
         tempcells = copy.copy(cells)
@@ -433,7 +433,7 @@ class MyWindow(QtWidgets.QMainWindow):
                 if box.isInside(point) and cell in cells:
                     cells.remove(cell)  #Remove the cell that coincides with a box
 
-        print("Number of cells: " + str(len(cells)))
+        # print("Number of cells: " + str(len(cells)))
 
         midpoints = []
         midpoints.append(Point(items_dict['robot'].x, items_dict['robot'].y))
@@ -441,9 +441,9 @@ class MyWindow(QtWidgets.QMainWindow):
         for cell in cells:
             midpoints.append(cell.getCenter())
 
-        print("Final Midpoints")
-        print(midpoints)
-        print(len(midpoints))
+        # print("Final Midpoints")
+        # print(midpoints)
+        # print(len(midpoints))
 
         #Create the graph
         graph = generateGraph(midpoints,cells)
@@ -457,13 +457,13 @@ class MyWindow(QtWidgets.QMainWindow):
             self.update()
             return
 
-        print("Midpoints to solution:")
+        # print("Midpoints to solution:")
         for index in range(len(path) - 1):
             p = Path(midpoints[path[index]].x, midpoints[path[index]].y, midpoints[path[index+1]].x, midpoints[path[index+1]].y)
             items_dict['Path'].append(p)
 
-        print(path)
-        print('plotted')
+        # print(path)
+        # print('plotted')
         self.update()
 
     def removePath(self):
@@ -478,7 +478,7 @@ class MyWindow(QtWidgets.QMainWindow):
         global items, items_dict
         items_dict = {'robot': None, 'box100': None, 'box150': None, 'box200': None,
               'HorizontalLines': [], 'VerticalLines': [], 'Path': [] }
-        print('Items removed')
+        # print('Items removed')
         self.removePathNotFound()
         self.update()
 
