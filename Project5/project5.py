@@ -68,6 +68,8 @@ def generateGraph(midpoints,cells):
     pprint.pprint(graph)
     return graph
 
+
+# source for Dijkstra algo: http://homepages.uc.edu/~annexsfs/UC_Pages/Sample_Codes_files/dijkstra.py
 def Dijkstra(G,start,end=None):
     D = {}  # dictionary of final distances
     P = {}  # dictionary of predecessors

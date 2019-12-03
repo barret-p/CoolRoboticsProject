@@ -1,3 +1,5 @@
+# http://docs.ros.org/fuerte/api/k-sap_pkg/html/priodict_8py_source.html
+
 from __future__ import generators
 
 class priorityDictionary(dict):
