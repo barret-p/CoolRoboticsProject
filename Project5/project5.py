@@ -1,4 +1,4 @@
-import sys, math, pprint, collections   
+import sys, math, pprint, collections, copy
 from functools import total_ordering
 from PyQt5 import QtGui, uic, QtCore, QtWidgets
 from priodict import priorityDictionary
@@ -85,7 +85,7 @@ def generateGraph(midpoints,cells):
     minimum = sys.maxsize
     index = 0
     for point in midpoints[2:]:
-        dist = distance(pointstart.x,pointstart.y,point.x,point.y)
+        dist = distance(pointstart, point)
         if minimum > dist:
             minimum = dist
             index = midpoints.index(point)
@@ -94,22 +94,34 @@ def generateGraph(midpoints,cells):
     minimum = sys.maxsize
     index = 0
     for point in midpoints[2:]:
-        dist = distance(pointend.x,pointend.y,point.x,point.y)
+        dist = distance(pointend, point)
         if minimum > dist:
             minimum = dist
             index = midpoints.index(point)
     graph[1][index] = minimum
     
-    #Fill in values 
-    for point in midpoints:
-        for cell in cells:
-            if cell.isAdjacent(point):
-                for p in midpoints:
-                    if cell.isAdjacent(p) and p != point:
-                        x = midpoints.index(p)
-                        y = midpoints.index(point)
+    # #Fill in values 
+    # for point in midpoints:
+    #     for cell in cells:
+    #         if cell.isAdjacent(point):
+    #             for p in midpoints:
+    #                 if cell.isAdjacent(p) and p != point:
+    #                     x = midpoints.index(p)
+    #                     y = midpoints.index(point)
                         
-                        graph[x][y] = distance(p.x,p.y,point.x,point.y)
+    #                     graph[x][y] = distance(p, point)
+    
+    for cell in cells:
+        centerpoint = cell.getCenter()
+        for othercell in cells:
+            if cell is not othercell and cell.isCellAdjacent(othercell):
+                othercenterpoint = othercell.getCenter()
+                ctrptidx = midpoints.index(centerpoint)
+                otherctrptidx = midpoints.index(othercenterpoint)
+                graph[ctrptidx][otherctrptidx] = distance(centerpoint, othercenterpoint)
+
+    
+    
     pprint.pprint(graph)
     return graph
 
@@ -194,6 +206,10 @@ class Box(UIItem):
 
     def getCenter(self):
         return Point(self.getTop().x, self.getRight().y)
+
+    def isInside(self, point):
+        return (point.x <= (self.x+self.size[0]) and point.x >= self.x) and \
+                   (point.y <= (self.y+self.size[1]) and point.y >= self.y)
     
     def draw(self, painter):
         painter.setBrush(QtCore.Qt.darkGray)
@@ -263,6 +279,12 @@ class Cell(Box):
             return True
         
         return False
+    def isCellAdjacent(self, cell):
+        if self.getTop() == cell.getBottom() or self.getRight() == cell.getLeft() \
+            or self.getBottom() == cell.getTop() or self.getLeft() == cell.getRight():
+            return True
+        else:
+            return False
         
 class MyWindow(QtWidgets.QMainWindow):
     def __init__(self):
@@ -426,24 +448,12 @@ class MyWindow(QtWidgets.QMainWindow):
         boxes = [items_dict['box100'], items_dict['box150'], items_dict['box200']]
         #Remove any None objects
         boxes = [box for box in boxes if box != None]
-        
-        # for item in items:
-        #     if isinstance(item, Box):
-        #         boxes.append(item)
 
         items_dict['VerticalLines'].append(VerticalLine(0,0,maxY))
         items_dict['VerticalLines'].append(VerticalLine(maxX,0,maxY))
         items_dict['HorizontalLines'].append(HorizontalLine(0,maxX,0))
         items_dict['HorizontalLines'].append(HorizontalLine(0,maxX,maxY))
-        # items.append(VerticalLine(0,0,maxY))
-        # items.append(HorizonalLine(0,maxX,0))
-        # items.append(VerticalLine(maxX,0,maxY))
-        # items.append(HorizonalLine(0,maxX,maxY))
-        # for box in boxes:
-        #     items.append(VerticalLine(box.x, 0, maxY))
-        #     items.append(VerticalLine(box.x+box.size[0], 0, maxY))
-        #     items.append(HorizonalLine(0, maxX, box.y))
-        #     items.append(HorizonalLine(0, maxX, box.y+box.size[1]))
+
         for box in boxes:
             items_dict['VerticalLines'].append(VerticalLine(box.x, 0, maxY))
             items_dict['VerticalLines'].append(VerticalLine(box.x+box.size[0], 0, maxY))
@@ -454,12 +464,6 @@ class MyWindow(QtWidgets.QMainWindow):
         hlines = items_dict['HorizontalLines']
         vlines = items_dict['VerticalLines']
 
-        # for item in items:
-        #     if isinstance(item, HorizontalLine):
-        #         hlines.append(item)
-        #     if isinstance(item, VerticalLine):
-        #         vlines.append(item)
-        
         # sort functions
         def sort_by_x(vline):
             return vline.x
@@ -469,6 +473,7 @@ class MyWindow(QtWidgets.QMainWindow):
 
         vlines = sorted(vlines, key = sort_by_x)
         hlines = sorted(hlines, key = sort_by_y)
+
 
         #Create Cell Representations
         cells = []
@@ -482,53 +487,60 @@ class MyWindow(QtWidgets.QMainWindow):
         print("Number of cells: " + str(len(cells)))
 
         #Remove boxes from the cell list
-        for cell in cells:
+        tempcells = copy.copy(cells)
+        for cell in tempcells:
+            point = cell.getCenter()
             for box in boxes:
-                if(cell.x == box.x and cell.y == box.y):
+                if box.isInside(point):
                     cells.remove(cell)  #Remove the cell that coincides with a box
+
         print("Number of cells: " + str(len(cells)))
 
-        #Get list of midpoints
-        all_cells = []
-        for box in boxes:
-            all_cells.append((box.getCenter(), False))
+        # #Get list of midpoints
+        # all_cells = []
+        # for box in boxes:
+        #     all_cells.append((box.getCenter(), False))
         
+        # for cell in cells:
+        #     all_cells.append((cell.getCenter(), True))
+        
+        # all_cells.sort(key = lambda x: x[0].y)
+        
+        # board_matrix = [[all_cells[0]]]
+        # idx = 0
+        
+        # for cell in all_cells[1:]:
+        #     if cell[0].y == board_matrix[idx][0][0].y:
+        #         board_matrix[idx].append(cell)
+        #     else:
+        #         idx += 1
+        #         board_matrix.append([cell])
+        
+        # robot = items_dict['robot']
+        # start_point = sorted([(distance(Point(robot.x, robot.y), cell[0]), cell) for cell in all_cells], key = lambda x: x[0])[0]
+        # end_point = sorted([(distance(Point(robot.x_end, robot.y_end), cell[0]), cell) for cell in all_cells], key = lambda x: x[0])[0]
+        # print(f'Start cell: {start_point[1][0].x}, {start_point[1][0].y}')
+        # print(f'End cell: {end_point[1][0].x}, {end_point[1][0].y}')
+        
+        # start_point_cell = start_point[1]
+        # end_point_cell = end_point[1]
+
+        midpoints = []
+        midpoints.append(Point(items_dict['robot'].x, items_dict['robot'].y))
+        midpoints.append(Point(items_dict['robot'].x_end, items_dict['robot'].y_end))
         for cell in cells:
-            all_cells.append((cell.getCenter(), True))
-        
-        all_cells.sort(key = lambda x: x[0].y)
-        
-        board_matrix = [[all_cells[0]]]
-        idx = 0
-        
-        for cell in all_cells[1:]:
-            if cell[0].y == board_matrix[idx][0][0].y:
-                board_matrix[idx].append(cell)
-            else:
-                idx += 1
-                board_matrix.append([cell])
-        
-        robot = items_dict['robot']
-        start_point = sorted([(distance(Point(robot.x, robot.y), cell[0]), cell) for cell in all_cells], key = lambda x: x[0])[0]
-        end_point = sorted([(distance(Point(robot.x_end, robot.y_end), cell[0]), cell) for cell in all_cells], key = lambda x: x[0])[0]
-        print(f'Start cell: {start_point[1][0].x}, {start_point[1][0].y}')
-        print(f'End cell: {end_point[1][0].x}, {end_point[1][0].y}')
-        
-        start_point_cell = start_point[1]
-        end_point_cell = end_point[1]
+            midpoints.append(cell.getCenter())
 
-        for point in cellmidpoints: #Remove points that touch boxes
-            doesnt_touch_box = True
-            for box in boxes:
-                if (point.x <= (box.x+box.size[0]) and point.x >= box.x) and \
-                   (point.y <= (box.y+box.size[1]) and point.y >= box.y):
-                    doesnt_touch_box = False
-            if doesnt_touch_box == True:
-                tempmidpoints.append(point)
 
-        for point in tempmidpoints: #Remove points that touch the boundary
-            if not (point.x == 0 or point.y == 0 or point.x == maxX or point.y == maxY):
-                midpoints.append(point)
+        # tempmidpoints = []
+        # for point in cellmidpoints: #Remove points that touch boxes
+        #     doesnt_touch_box = True
+        #     for box in boxes:
+        #         if (point.x <= (box.x+box.size[0]) and point.x >= box.x) and \
+        #            (point.y <= (box.y+box.size[1]) and point.y >= box.y):
+        #             doesnt_touch_box = False
+        #     if doesnt_touch_box == True:
+        #         tempmidpoints.append(point)
 
         print("Final Midpoints")
         print(midpoints)
@@ -557,7 +569,6 @@ class MyWindow(QtWidgets.QMainWindow):
 
     def removePath(self):
         global items, items_dict
-        items = [item for item in items if isinstance(item, Robot) or isinstance(item, Box)]
         items_dict['HorizontalLines'] = []
         items_dict['VerticalLines'] = []
         items_dict['Path'] = []
