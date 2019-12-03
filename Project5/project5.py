@@ -449,6 +449,15 @@ class MyWindow(QtWidgets.QMainWindow):
         #Remove any None objects
         boxes = [box for box in boxes if box != None]
 
+        #Check if either start or end point is inside a box
+        for box in boxes:
+            startpoint = Point(items_dict['robot'].x, items_dict['robot'].y)
+            endpoint = Point(items_dict['robot'].x_end, items_dict['robot'].y_end)
+            if box.isInside(startpoint) or box.isInside(endpoint):
+                self.displayPathNotFound()
+                self.update()
+                return
+
         items_dict['VerticalLines'].append(VerticalLine(0,0,maxY))
         items_dict['VerticalLines'].append(VerticalLine(maxX,0,maxY))
         items_dict['HorizontalLines'].append(HorizontalLine(0,maxX,0))
@@ -491,7 +500,7 @@ class MyWindow(QtWidgets.QMainWindow):
         for cell in tempcells:
             point = cell.getCenter()
             for box in boxes:
-                if box.isInside(point):
+                if box.isInside(point) and cell in cells:
                     cells.remove(cell)  #Remove the cell that coincides with a box
 
         print("Number of cells: " + str(len(cells)))
