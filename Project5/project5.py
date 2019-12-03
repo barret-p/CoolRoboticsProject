@@ -35,7 +35,7 @@ class PriorityQueue():
             return None
         
 def get_possible_cells(cell, matrix):
-    index_of_cell = [(i, m.index(c) for i, c enumerate(matrix) if cell in c)]
+    index_of_cell = [(i, m.index(c)) for i, c in enumerate(matrix) if cell in c]
     return [(index_of_cell[0]+1, index_of_cell[1]), (index_of_cell[0]-1, index_of_cell[1]),
             (index_of_cell[0], index_of_cell[1]+1), (index_of_cell[0], index_of_cell[1]-1)]
         
@@ -47,7 +47,7 @@ def CalculatePath(start, end, matrix):
     current_cell = start[0]
     q = PriorityQueue(end)
     
-    while current_cell not end[0]:
+    while current_cell != end[0]:
         indexes = get_possible_cells(current_cell, matrix)
         
         for idx in indexes:
