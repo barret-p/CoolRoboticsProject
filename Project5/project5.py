@@ -12,63 +12,6 @@ originY = 20
 maxX = 520
 maxY = 520
 
-def distance(point1, point2):
-    return math.sqrt((point2.y-point1.y)**2 + (point2.x-point1.x)**2)
-
-def uniquify(li):
-    checked = []
-    for e in li:
-        if e not in checked:
-            checked.append(e)
-    return checked
-
-#Returns a graph represented as a list of lists of size n by n.
-#Nonexistant edges are represented by None
-#It is an adjacency matrix
-def generateGraph(midpoints,cells):
-    #initialize graph
-    graph = {}
-    for point in midpoints:
-        graph[midpoints.index(point)] = {}
-
-    graph[0] = {}
-    graph[1] = {}
-    
-    pointstart = midpoints[0]
-    pointend = midpoints[1]
-    minimum = sys.maxsize
-    index = 0
-    for point in midpoints[2:]:
-        dist = distance(pointstart, point)
-        if minimum > dist:
-            minimum = dist
-            index = midpoints.index(point)
-    graph[0][index] = minimum
-
-    minimum = sys.maxsize
-    index = 0
-    for point in midpoints[2:]:
-        dist = distance(pointend, point)
-        if minimum > dist:
-            minimum = dist
-            index = midpoints.index(point)
-    graph[1][index] = minimum
-    
-    for cell in cells:
-        centerpoint = cell.getCenter()
-        for othercell in cells:
-            if cell is not othercell and cell.isCellAdjacent(othercell):
-                othercenterpoint = othercell.getCenter()
-                ctrptidx = midpoints.index(centerpoint)
-                otherctrptidx = midpoints.index(othercenterpoint)
-                graph[ctrptidx][otherctrptidx] = distance(centerpoint, othercenterpoint)
-
-    
-    
-    # pprint.pprint(graph)
-    return graph
-
-
 # source for Dijkstra algo: http://homepages.uc.edu/~annexsfs/UC_Pages/Sample_Codes_files/dijkstra.py
 def Dijkstra(G,start,end=None):
     D = {}  # dictionary of final distances
@@ -114,6 +57,54 @@ def shortestPath(G,start,end):
     Path.reverse()
     return Path
             
+def distance(point1, point2):
+    return math.sqrt((point2.y-point1.y)**2 + (point2.x-point1.x)**2)
+
+# creates adjacency matrix
+def generateGraph(centerpoints,cells):
+    #initialize graph
+    graph = {}
+    for point in centerpoints:
+        graph[centerpoints.index(point)] = {}
+
+    graph[0] = {}
+    graph[1] = {}
+    
+    pointstart = centerpoints[0]
+    pointend = centerpoints[1]
+    minimum = sys.maxsize
+    index = 0
+    for point in centerpoints[2:]:
+        dist = distance(pointstart, point)
+        if minimum > dist:
+            minimum = dist
+            index = centerpoints.index(point)
+    graph[0][index] = minimum
+
+    minimum = sys.maxsize
+    index = 0
+    for point in centerpoints[2:]:
+        dist = distance(pointend, point)
+        if minimum > dist:
+            minimum = dist
+            index = centerpoints.index(point)
+    graph[1][index] = minimum
+    
+    for cell in cells:
+        centerpoint = cell.getCenter()
+        for othercell in cells:
+            if cell is not othercell and cell.isCellAdjacent(othercell):
+                othercenterpoint = othercell.getCenter()
+                ctrptidx = centerpoints.index(centerpoint)
+                otherctrptidx = centerpoints.index(othercenterpoint)
+                graph[ctrptidx][otherctrptidx] = distance(centerpoint, othercenterpoint)
+
+    # pprint.pprint(graph)
+    return graph
+
+# define various classes for ui elements
+
+# parent class
 class UIItem:
     def __init__(self):
         self.X = 20
@@ -232,7 +223,7 @@ class MyWindow(QtWidgets.QMainWindow):
         self.initUI()
         
     def initUI(self):
-        #Go to functions when buttons are pressed
+        # functions for button press
         self.addRobotButton.clicked.connect(self.addRobot)
         self.addBox1Button.clicked.connect(self.addBox1)
         self.addBox2Button.clicked.connect(self.addBox2)
@@ -258,6 +249,7 @@ class MyWindow(QtWidgets.QMainWindow):
         global originX, originY, items
         qp.drawRect(originX, originY, originX+500, originY+500)
 
+        # draw every item according to its draw function
         for item in items_dict.values():
             if item != None:
                 if isinstance(item, collections.Iterable):
@@ -373,13 +365,12 @@ class MyWindow(QtWidgets.QMainWindow):
         self.pathNotFoundLabel.hide()
 
     def calculate(self):
-        #Draw Vertical and Horizonal Lines
         global items, items_dict
         boxes = [items_dict['box100'], items_dict['box150'], items_dict['box200']]
-        #Remove any None objects
+        # remove any none objects
         boxes = [box for box in boxes if box != None]
 
-        #Check if either start or end point is inside a box
+        # check if either start or end point is inside a box
         for box in boxes:
             startpoint = Point(items_dict['robot'].x, items_dict['robot'].y)
             endpoint = Point(items_dict['robot'].x_end, items_dict['robot'].y_end)
@@ -399,7 +390,7 @@ class MyWindow(QtWidgets.QMainWindow):
             items_dict['HorizontalLines'].append(HorizontalLine(0, maxX, box.y))
             items_dict['HorizontalLines'].append(HorizontalLine(0, maxX, box.y+box.size[1]))
 
-        #Sort Lines
+        # sort lines
         hlines = items_dict['HorizontalLines']
         vlines = items_dict['VerticalLines']
 
@@ -414,52 +405,40 @@ class MyWindow(QtWidgets.QMainWindow):
         hlines = sorted(hlines, key = sort_by_y)
 
 
-        #Create Cell Representations
+        # create cell representations
         cells = []
         for i in range(0,len(vlines)-1):
             for j in range(0,len(hlines)-1):
-                xpos = vlines[i].x
-                ypos = hlines[j].y
+                x = vlines[i].x
+                y = hlines[j].y
                 xsize = vlines[i+1].x - vlines[i].x
                 ysize = hlines[j+1].y - hlines[j].y
-                cells.append(Cell(xpos,ypos,[xsize,ysize]))
+                cells.append(Cell(x,y,[xsize,ysize]))
         # print("Number of cells: " + str(len(cells)))
 
-        #Remove boxes from the cell list
+        # remove boxes from the cell list
         tempcells = copy.copy(cells)
         for cell in tempcells:
             point = cell.getCenter()
             for box in boxes:
                 if box.isInside(point) and cell in cells:
-                    cells.remove(cell)  #Remove the cell that coincides with a box
+                    cells.remove(cell) 
 
-        # print("Number of cells: " + str(len(cells)))
-
-        midpoints = []
-        midpoints.append(Point(items_dict['robot'].x, items_dict['robot'].y))
-        midpoints.append(Point(items_dict['robot'].x_end, items_dict['robot'].y_end))
+        centerpoints = []
+        centerpoints.append(Point(items_dict['robot'].x, items_dict['robot'].y))
+        centerpoints.append(Point(items_dict['robot'].x_end, items_dict['robot'].y_end))
         for cell in cells:
-            midpoints.append(cell.getCenter())
+            centerpoints.append(cell.getCenter())
 
-        # print("Final Midpoints")
-        # print(midpoints)
-        # print(len(midpoints))
-
-        #Create the graph
-        graph = generateGraph(midpoints,cells)
-
-        #Use Dijkstras to find the shortest path
+        graph = generateGraph(centerpoints,cells)
         path = shortestPath(graph,0,1)
-
-        #Check if path connects start and end point
         if path == -1:
             self.displayPathNotFound()
             self.update()
             return
 
-        # print("Midpoints to solution:")
         for index in range(len(path) - 1):
-            p = Path(midpoints[path[index]].x, midpoints[path[index]].y, midpoints[path[index+1]].x, midpoints[path[index+1]].y)
+            p = Path(centerpoints[path[index]].x, centerpoints[path[index]].y, centerpoints[path[index+1]].x, centerpoints[path[index+1]].y)
             items_dict['Path'].append(p)
 
         # print(path)
